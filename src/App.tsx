@@ -3,6 +3,7 @@ import { TypewriterText } from './components/TypewriterText';
 import { TerminalWindow } from './components/TerminalWindow';
 import { SkillsGrid } from './components/SkillsGrid';
 import { ProjectCard } from './components/ProjectCard';
+import { BackgroundAnimation } from './components/BackgroundAnimation';
 import { Button } from './components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Badge } from './components/ui/badge';
@@ -59,9 +60,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen text-gray-100 relative">
+      {/* Vaporwave Background Animation */}
+      <BackgroundAnimation />
+      
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-800 backdrop-blur-sm border-b border-gray-700">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="font-mono text-green-400">
@@ -113,7 +117,7 @@ export default function App() {
       {/* Hero Section */}
       <section id="hero" className="min-h-screen flex items-center justify-center px-6 pt-20">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <TerminalWindow title="~/welcome" className="max-w-3xl mx-auto">
+          <TerminalWindow title="~/welcome" className="max-w-3xl mx-auto bg-gray-900">
             <div className="space-y-4">
               <div className="text-gray-400">
                 <span className="text-green-400">guest@portfolio:~$</span> whoami
@@ -167,7 +171,7 @@ export default function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 px-6">
+      <section id="about" className="py-20 px-6 bg-transparent">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-mono text-green-400 mb-8 flex items-center">
             <User className="w-8 h-8 mr-3" />
@@ -223,7 +227,7 @@ export default function App() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-gray-800/50">
+      <section id="projects" className="py-20 px-6 bg-gray-800/80">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-mono text-green-400 mb-8 flex items-center">
             <Briefcase className="w-8 h-8 mr-3" />
@@ -239,28 +243,28 @@ export default function App() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-20 px-6">
+      <section id="skills" className="py-20 px-6 bg-transparent">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-mono text-green-400 mb-8 flex items-center">
             <Code className="w-8 h-8 mr-3" />
             Skills & Technologies
           </h2>
           
-          <TerminalWindow title="~/skills --verbose">
+          <TerminalWindow title="~/skills --verbose" className="bg-gray-900">
             <SkillsGrid />
           </TerminalWindow>
         </div>
       </section>
 
       {/* Resume Section */}
-      <section id="resume" className="py-28 px-6 bg-gray-800/50">
+      <section id="resume" className="py-28 px-6 bg-gray-800/80">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-mono text-green-400 mb-8 flex items-center">
             <FileText className="w-8 h-8 mr-3" />
             Resume
           </h2>
           
-          <TerminalWindow title="~/resume.pdf">
+          <TerminalWindow title="~/resume.pdf" className="bg-gray-900">
             <div className="space-y-6">
               <div className="text-gray-400 mb-4">
                 <span className="text-green-400">guest@portfolio:~$</span> cat resume.pdf
@@ -301,14 +305,14 @@ export default function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-6 bg-gray-800/50">
+      <section id="contact" className="py-20 px-6 bg-gray-800/80">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-mono text-green-400 mb-8 flex items-center justify-center">
             <Mail className="w-8 h-8 mr-3" />
             Let's Connect
           </h2>
           
-          <TerminalWindow title="~/contact">
+          <TerminalWindow title="~/contact" className="bg-gray-900">
             <div className="space-y-6">
               <div className="text-gray-400">
                 <span className="text-green-400">guest@portfolio:~$</span> cat contact_me.txt
@@ -363,7 +367,7 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-gray-700">
+      <footer className="py-8 px-6 border-t border-gray-700 bg-gray-900">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-gray-400 font-mono">
             <span className="text-green-400">~/portfolio</span> © 2025 Will Blodgett

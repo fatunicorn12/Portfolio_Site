@@ -1570,22 +1570,22 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: none;
+  background: #0a0a0a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22c55e4d;
-  border: 2px solid #111827;
+  background: #22c55e;
+  border: none;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #22c55e80;
+  background: #16a34a;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #22c55e4d transparent;
+  scrollbar-color: #22c55e #0a0a0a;
 }
 
 @property --tw-space-y-reverse {
