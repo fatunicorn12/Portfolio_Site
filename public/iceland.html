@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iceland Itinerary</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:    #080f1a;
+      --surf:  #0d1829;
+      --surf2: #111f35;
+      --brd:   #1a2d44;
+      --text:  #dde6f2;
+      --muted: #5a7490;
+      --d1: #2a5298; --d2: #c8960c; --d3: #1a7a6e;
+      --d4: #8bbecf; --d5: #7b68ac; --d6: #c4622d; --d7: #7a7a7a;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 13px;
+    }
+
+    /* ── Header ── */
+    #hdr {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      background: var(--surf);
+      border-bottom: 1px solid var(--brd);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .03em;
+      position: sticky;
+      top: 0;
+      z-index: 9000;
+    }
+    #hdr .sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .hdot { width: 7px; height: 7px; border-radius: 50%; background: var(--d1); flex-shrink: 0; }
+
+    /* ── Map ── */
+    #map-wrap { position: relative; height: calc(50vh - 20px); min-height: 300px; }
+    #map { width: 100%; height: 100%; background: #050c18; }
+
+    /* Legend */
+    #lgd {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      background: rgba(8,15,26,.92);
+      border: 1px solid var(--brd);
+      border-radius: 6px;
+      padding: 8px 12px;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+    .lr {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+    .lr:last-child { margin-bottom: 0; }
+    .ll { width: 16px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+
+    /* Leaflet popup dark override */
+    .leaflet-popup-content-wrapper {
+      background: var(--surf2) !important;
+      color: var(--text) !important;
+      border: 1px solid var(--brd) !important;
+      border-radius: 6px !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,.75) !important;
+    }
+    .leaflet-popup-tip { background: var(--surf2) !important; }
+    .leaflet-popup-close-button {
+      color: var(--muted) !important;
+      top: 5px !important;
+      right: 7px !important;
+      font-size: 18px !important;
+      line-height: 1 !important;
+    }
+    .leaflet-popup-content {
+      margin: 11px 14px !important;
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 12px !important;
+      line-height: 1.5 !important;
+      min-width: 160px;
+      max-width: 230px;
+    }
+    .p-day { font-family: 'DM Mono', monospace; font-size: 10px; margin-bottom: 2px; letter-spacing: .05em; }
+    .p-name { font-size: 13px; font-weight: 600; margin-bottom: 5px; line-height: 1.25; }
+    .p-tip { font-size: 11px; color: #7aa8c8; line-height: 1.5; }
+    .leaflet-control-attribution {
+      font-size: 9px !important;
+      background: rgba(8,15,26,.7) !important;
+      color: var(--muted) !important;
+    }
+    .leaflet-control-attribution a { color: var(--muted) !important; }
+
+    /* Drive time labels */
+    .dl {
+      display: inline-block;
+      transform: translate(-50%, -50%);
+      background: rgba(8,15,26,.82);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: rgba(200,220,245,.58);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Stop markers */
+    .sm {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.4);
+      cursor: pointer;
+      transition: transform .12s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1;
+    }
+    .sm:hover { transform: scale(1.55); }
+
+    /* ── Cards section ── */
+    #cards { padding: 10px 10px 28px; }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .card {
+      background: var(--surf);
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-size: 11px;
+    }
+
+    /* Card header */
+    .ch { padding: 7px 10px 6px; border-bottom: 1px solid var(--brd); }
+    .ch-n {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 2px;
+    }
+    .ch-t { font-size: 12px; font-weight: 600; line-height: 1.2; }
+
+    /* Card body */
+    .cb { padding: 7px 10px 8px; display: flex; flex-direction: column; flex: 1; }
+    .sep { height: 1px; background: var(--brd); margin: 5px 0; flex-shrink: 0; }
+
+    /* Activity row */
+    .r { display: flex; flex-direction: column; padding: 2px 0; }
+    .rm { display: flex; gap: 6px; align-items: flex-start; }
+    .rl {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      min-width: 32px;
+      padding-top: 1px;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+    .ra { font-size: 11px; color: var(--text); line-height: 1.4; }
+    .rt {
+      font-size: 10px;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.4;
+      padding-left: 38px;
+      margin-top: 1px;
+    }
+
+    /* Warning rows */
+    .r.warn {
+      border-left: 2px solid #7a2520;
+      padding-left: 5px;
+      background: rgba(122,37,32,.07);
+      border-radius: 0 3px 3px 0;
+    }
+    .r.warn .ra { color: #cc5a53; }
+    .r.warn .rt { color: #8a4a46; padding-left: 38px; }
+
+    /* Book-ahead rows */
+    .r.book {
+      border-left: 2px solid #7a5c0a;
+      padding-left: 5px;
+      background: rgba(122,92,10,.07);
+      border-radius: 0 3px 3px 0;
+    }
+    .r.book .ra { color: #c8960c; }
+    .r.book .rt { padding-left: 38px; }
+
+    /* Sequence number badge (activity rows) */
+    .seq-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      color: var(--muted);
+      min-width: 10px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    @media (max-width: 1100px) { #grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 700px)  { #grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) {
+      #grid { grid-template-columns: 1fr; gap: 6px; }
+      #cards { padding: 8px 8px 24px; }
+      #map-wrap { height: 42vh; min-height: 220px; }
+      #lgd { padding: 5px 9px; }
+      .lr { font-size: 9px; gap: 5px; margin-bottom: 3px; }
+      .ll { width: 12px; }
+      .ch-t { font-size: 13px; }
+      .ra { font-size: 12px; }
+      .rt { font-size: 11px; }
+      .sleep-name { font-size: 11.5px; }
+      .sleep-meta { font-size: 9.5px; }
+    }
+
+    /* ── Hotel markers ── */
+    @keyframes htlPulse {
+      0%   { box-shadow: 0 0 0 0px rgba(200,140,10,.75); }
+      70%  { box-shadow: 0 0 0 9px rgba(200,140,10,0); }
+      100% { box-shadow: 0 0 0 0px rgba(200,140,10,0); }
+    }
+    .hm-urgent { animation: htlPulse 2.4s ease-out infinite; }
+
+    /* ── Sleep panels ── */
+    .sleep-wrap { margin-top: 4px; }
+    .sleep-toggle {
+      width: 100%;
+      background: none;
+      border: 1px solid var(--brd);
+      border-radius: 4px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 9.5px;
+      padding: 4px 8px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      transition: border-color .15s, color .15s;
+    }
+    .sleep-toggle::after { content: '▸'; font-size: 8px; flex-shrink: 0; }
+    .sleep-toggle.open::after { content: '▾'; }
+    .sleep-toggle:hover { color: var(--text); border-color: var(--muted); }
+    .sleep-list { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .sleep-list.open { max-height: 800px; }
+    .sleep-row {
+      padding: 4px 4px 4px 7px;
+      border-left: 2px solid transparent;
+      margin-top: 3px;
+      border-radius: 0 3px 3px 0;
+    }
+    .sleep-row.rec { background: rgba(255,255,255,.03); }
+    .sleep-top { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; line-height: 1.3; }
+    .sleep-bot { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+    .sleep-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      min-width: 14px;
+      flex-shrink: 0;
+    }
+    .sleep-name { font-size: 10.5px; font-weight: 500; color: var(--text); }
+    .sleep-meta { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .sleep-book { font-size: 9px; color: #7aa8c8; text-decoration: none; white-space: nowrap; }
+    .sleep-book:hover { color: var(--text); }
+    .badge-urgent {
+      font-size: 8px;
+      background: rgba(200,70,50,.2);
+      color: #e07060;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-family: 'DM Mono', monospace;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .badge-airbnb {
+      font-size: 8px;
+      background: rgba(255,80,70,.12);
+      color: #e08070;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-family: 'DM Mono', monospace;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .sleep-nl { font-size: 10px; cursor: default; flex-shrink: 0; }
+    .sleep-note {
+      font-size: 9px;
+      font-style: italic;
+      color: var(--muted);
+      padding: 5px 4px 2px 7px;
+      line-height: 1.5;
+      border-top: 1px solid var(--brd);
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="hdr">
+  <div class="hdot"></div>
+  Iceland — 7 Days
+  <span class="sub">Sep &nbsp;·&nbsp; South &amp; West Ring</span>
+</div>
+
+<div id="map-wrap">
+  <div id="map"></div>
+  <div id="lgd">
+    <div class="lr"><div class="ll" style="background:var(--d1)"></div>Day 1 — Arrival</div>
+    <div class="lr"><div class="ll" style="background:var(--d2)"></div>Day 2 — Golden Circle</div>
+    <div class="lr"><div class="ll" style="background:var(--d3)"></div>Day 3 — South Coast</div>
+    <div class="lr"><div class="ll" style="background:var(--d4)"></div>Day 4 — Glacier Lagoon</div>
+    <div class="lr"><div class="ll" style="background:var(--d5)"></div>Day 5 — Return</div>
+    <div class="lr"><div class="ll" style="background:var(--d6)"></div>Day 6 — Reykjavík</div>
+    <div class="lr"><div class="ll" style="background:var(--d7)"></div>Day 7 — Departure</div>
+  </div>
+</div>
+
+<div id="cards">
+  <div id="grid">
+
+    <!-- ── Day 1 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d1)">
+        <div class="ch-n">Day 1</div>
+        <div class="ch-t" style="color:#5a88dc">Arrival → Reykjavík</div>
+      </div>
+      <div class="cb">
+        <div class="r book">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">land</span><span class="ra">Blue Lagoon (optional)</span></div>
+          <div class="rt">5 min from KEF — great way to decompress straight off the plane. Book weeks ahead — sells out.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">2</span><span class="rl">drive</span><span class="ra">Reykjavík ~45 min</span></div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">3</span><span class="rl">PM</span><span class="ra">Hallgrímskirkja</span></div>
+          <div class="rt">Pay to go up the tower — sweeping city views.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">4</span><span class="rl"></span><span class="ra">Harpa concert hall</span></div>
+          <div class="rt">Check if the Icelandic Symphony has anything on that evening.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">5</span><span class="rl"></span><span class="ra">Walk along the waterfront</span></div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">6</span><span class="rl">eat</span><span class="ra">Bæjarins Beztu Pylsur</span></div>
+          <div class="rt">Hot dog — a rite of passage.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">7</span><span class="rl">din</span><span class="ra">Kol / Pósthús / Hafnartorg</span></div>
+          <div class="rt">Food halls downtown.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">8</span><span class="rl">eve</span><span class="ra">Aurora check</span></div>
+          <div class="rt">My Aurora Forecast + vedur.is. KP 2+ &amp; clear skies → drive 20–30 min outside city. Dark by ~9:30–10pm.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="sleep-wrap">
+          <button class="sleep-toggle" style="border-color:var(--d1)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 4 options</button>
+          <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d1)">
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Apótek Hotel by Keahotels</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Boutique · ~$826–$970 · ★8.8</span><a class="sleep-book" href="https://www.google.com/search?q=Apotek+Hotel+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d1)">
+              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">ION City Hotel</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Boutique (Design) · ~$906 · ★8.8</span><a class="sleep-book" href="https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d1)">
+              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Center Hotels Arnarhvoll</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Design · ~$728–$850 · ★8.2</span><a class="sleep-book" href="https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d1)">
+              <div class="sleep-top"><span class="sleep-num">4.</span><span class="sleep-name">City Center Hotel</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Boutique · $527 · ★8.7</span><a class="sleep-book" href="https://www.google.com/search?q=City+Center+Hotel+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Day 2 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d2)">
+        <div class="ch-n">Day 2</div>
+        <div class="ch-t" style="color:#d4a830">The Golden Circle</div>
+      </div>
+      <div class="cb">
+        <div class="r">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">AM</span><span class="ra">Þingvellir National Park</span></div>
+          <div class="rt">~45 min drive. Walk the rift valley between tectonic plates. Parliament founded 930 AD.</div>
+        </div>
+        <div class="r book">
+          <div class="rm"><span class="seq-num">2</span><span class="rl"></span><span class="ra">Silfra snorkeling</span></div>
+          <div class="rt">Snorkel between 2 continents. 100m+ visibility. Dry suits provided. Book weeks ahead via Dive.is — sells out.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">3</span><span class="rl">lunch</span><span class="ra">Friðheimar</span></div>
+          <div class="rt">Working tomato farm with restaurant inside the greenhouse.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">4</span><span class="rl">PM</span><span class="ra">Geysir geothermal area</span></div>
+          <div class="rt">Watch Strokkur erupt every few minutes.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">5</span><span class="rl"></span><span class="ra">Gullfoss waterfall</span></div>
+          <div class="rt">One of Europe's most powerful waterfalls.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">6</span><span class="rl">drive</span><span class="ra">Back via Hveragerði</span></div>
+          <div class="rt">Hot spring town — you'll hike from here tomorrow morning.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">7</span><span class="rl">sleep</span><span class="ra">Selfoss or Reykjavík</span></div>
+        </div>
+        <div class="sep"></div>
+        <div class="sleep-wrap">
+          <button class="sleep-toggle" style="border-color:var(--d2)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 2 options</button>
+          <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d2)">
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Hotel Rangá</span><span class="badge-urgent">‼ BOOK TODAY</span><span class="sleep-nl" title="Northern lights wake-up service included">🌌</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Luxury Lodge · ~$2,821 · ★9.0</span><a class="sleep-book" href="https://www.hotelranga.is" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d2)">
+              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">Hotel Kanslarinn Hella</span><span class="sleep-meta" style="color:var(--muted)">fallback</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Hotel · ~$456 · ★8.4</span><a class="sleep-book" href="https://www.google.com/search?q=Hotel+Kanslarinn+Hella+Iceland+booking" target="_blank">Book →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Day 3 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d3)">
+        <div class="ch-n">Day 3</div>
+        <div class="ch-t" style="color:#28a898">Hot River + South Coast</div>
+      </div>
+      <div class="cb">
+        <div class="r">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">AM</span><span class="ra">Reykjadalur hike</span></div>
+          <div class="rt">From Hveragerði, ~3 hrs round trip. Ends at a geothermal river you can swim in. Bring swimsuit, towel, change of clothes.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">2</span><span class="rl"></span><span class="ra">Stop in Selfoss</span></div>
+          <div class="rt">Famous hot dog stand.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">3</span><span class="rl">PM</span><span class="ra">Skógafoss waterfall</span></div>
+          <div class="rt">Walk to base or climb the stairs alongside for a top view.</div>
+        </div>
+        <div class="r warn">
+          <div class="rm"><span class="seq-num">4</span><span class="rl"></span><span class="ra">Reynisfjara black sand beach</span></div>
+          <div class="rt">⚠ Do not approach the water. Sneaker waves are unpredictable and have killed tourists. Stay well back. Basalt columns, sea stacks.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">5</span><span class="rl">sleep</span><span class="ra">Vík</span></div>
+          <div class="rt">Far from light pollution — excellent northern lights conditions.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="sleep-wrap">
+          <button class="sleep-toggle" style="border-color:var(--d3)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 3 options</button>
+          <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d3)">
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Black Beach Suites</span><span class="badge-urgent">‼ URGENT</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Suites · ~$491–$588/unit · ★9.3</span><a class="sleep-book" href="https://www.google.com/search?q=Black+Beach+Suites+Vik+Iceland+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d3)">
+              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">Hótel Kría</span><span class="badge-urgent">‼ URGENT</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Design · ~$950 incl. bkfst · ★8.9</span><a class="sleep-book" href="https://www.google.com/search?q=Hotel+Kria+Vik+Iceland+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d3)">
+              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Seljalandsfoss Horizons</span><span class="badge-airbnb">Airbnb</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">~$892 · ★4.91 (1,686)</span><a class="sleep-book" href="https://www.google.com/search?q=Seljalandsfoss+Horizons+Airbnb+Iceland" target="_blank">Book →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Day 4 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d4)">
+        <div class="ch-n">Day 4</div>
+        <div class="ch-t" style="color:#8bbecf">Glacier Lagoon</div>
+      </div>
+      <div class="cb">
+        <div class="r">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">early</span><span class="ra">Drive east — ~2.5 hrs from Vík</span></div>
+          <div class="rt">Big driving day, massive payoff.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">2</span><span class="rl">AM</span><span class="ra">Jökulsárlón glacier lagoon</span></div>
+          <div class="rt">Icebergs drifting through, seals hang out here.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">3</span><span class="rl"></span><span class="ra">Diamond Beach</span></div>
+          <div class="rt">Cross the road — ice chunks on black sand.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">4</span><span class="rl">PM</span><span class="ra">Head back west</span></div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">5</span><span class="rl">din</span><span class="ra">Kirkjubæjarklaustur</span></div>
+          <div class="rt">Interstellar filming location. Get the arctic char (bleikja) — genuinely great.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">6</span><span class="rl">sleep</span><span class="ra">Kirkjubæjarklaustur or Vík</span></div>
+        </div>
+        <div class="sep"></div>
+        <div class="sleep-wrap">
+          <button class="sleep-toggle" style="border-color:var(--d4)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 3 options</button>
+          <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d4)">
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Hotel Klaustur</span><span class="badge-urgent">‼ URGENT</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Hotel · ~$1,188–$1,306 · ★9.0</span><a class="sleep-book" href="https://www.google.com/search?q=Hotel+Klaustur+Kirkjubaejarklaustur+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row rec" style="border-left-color:var(--d4)">
+              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">⭐ Kársstaðir</span><span class="badge-airbnb">Airbnb</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Farmhouse · ~$1,273 · ★4.99</span><a class="sleep-book" href="https://www.google.com/search?q=Karsstadir+Airbnb+Iceland" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d4)">
+              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Cabin 3 G5</span><span class="badge-airbnb">Airbnb</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">3BR Cabin · ~$708 · ★4.87</span><a class="sleep-book" href="https://www.google.com/search?q=Cabin+G5+Klaustur+Airbnb+Iceland" target="_blank">Book →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Day 5 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d5)">
+        <div class="ch-n">Day 5</div>
+        <div class="ch-t" style="color:#9d8ccc">Back to Reykjavík</div>
+      </div>
+      <div class="cb">
+        <div class="r">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">AM</span><span class="ra">Scenic drive, south coast</span></div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">2</span><span class="rl">opt</span><span class="ra">Landmannalaugar</span></div>
+          <div class="rt">F-road — needs 4x4, confirm with rental. Technicolor rhyolite mountains &amp; hot springs.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r book">
+          <div class="rm"><span class="seq-num">3</span><span class="rl">PM</span><span class="ra">Sky Lagoon</span></div>
+          <div class="rt">Closer to Reykjavík, infinity edge, ocean views, less touristy. Book ahead.</div>
+        </div>
+        <div class="r book">
+          <div class="rm"><span class="seq-num">4</span><span class="rl">or</span><span class="ra">Blue Lagoon</span></div>
+          <div class="rt">Iconic. Near airport — if you skipped Day 1. Book ahead.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">5</span><span class="rl">din</span><span class="ra">OTO / Hosiló / Lóla</span></div>
+          <div class="rt">OTO = Michelin star, Italian-Japanese. Hosiló = rotating weekly menu. Lóla = Italian, get the focaccia with ricotta.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">6</span><span class="rl">sleep</span><span class="ra">Reykjavík</span></div>
+        </div>
+        <div class="sep"></div>
+        <div class="sleep-wrap">
+          <button class="sleep-toggle" style="border-color:var(--d5)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 3 options · Nights 5–6</button>
+          <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d5)">
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Canopy by Hilton Reykjavík</span><span class="badge-urgent">‼ BOOK TODAY</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Design · ~$927 incl. bkfst · ★9.2</span><a class="sleep-book" href="https://www.google.com/search?q=Canopy+by+Hilton+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d5)">
+              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">ION City Hotel</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Boutique · ~$808 · ★8.8</span><a class="sleep-book" href="https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d5)">
+              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Center Hotels Arnarhvoll</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Design · ~$805 · ★8.2</span><a class="sleep-book" href="https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Day 6 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d6)">
+        <div class="ch-n">Day 6</div>
+        <div class="ch-t" style="color:#d4783c">Reykjavík Day</div>
+      </div>
+      <div class="cb">
+        <div class="r">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">bkfst</span><span class="ra">Sandholt bakery or DEIG</span></div>
+          <div class="rt">DEIG = legendary bagels.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">2</span><span class="rl">AM</span><span class="ra">Þjóðminjasafnið (National Museum)</span></div>
+          <div class="rt">Really cool and fun.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">3</span><span class="rl"></span><span class="ra">Einar Jónsson sculpture garden</span></div>
+          <div class="rt">Free, beautiful, very Icelandic.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">4</span><span class="rl"></span><span class="ra">Kjarvalsstaðir / Marshall húsið</span></div>
+          <div class="rt">Marshall has Ólafur Elíasson work.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r warn">
+          <div class="rm"><span class="seq-num">5</span><span class="rl">PM</span><span class="ra">Vesturbæjarlaug pool</span></div>
+          <div class="rt">⚠ Must shower naked with soap before entering — enforced by attendants. Hot pots, great saunas, very local.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">6</span><span class="rl">opt</span><span class="ra">Ægissíða walk/bike · Esjan hike</span></div>
+          <div class="rt">Esjan: 2–3 hrs right outside city, great views over Reykjavík.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">7</span><span class="rl"></span><span class="ra">Downtown shops · FlyOver Iceland</span></div>
+          <div class="rt">Skip Kringlan and Smáralind malls — cooler shops downtown.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">8</span><span class="rl">din</span><span class="ra">Jómfrúin · Skál · Sushi Social</span></div>
+          <div class="rt">Jómfrúin = very Icelandic. Skál = smørrebrød, really great.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">9</span><span class="rl">eve</span><span class="ra">Petersen Svítan rooftop</span></div>
+          <div class="rt">Rooftop drinks. One last aurora check before bed.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="sleep-wrap">
+          <button class="sleep-toggle" style="border-color:var(--d6)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — Same hotel, Night 6</button>
+          <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d6)">
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Canopy by Hilton Reykjavík</span><span class="badge-urgent">‼ BOOK TODAY</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Design · ~$927 incl. bkfst · ★9.2</span><a class="sleep-book" href="https://www.google.com/search?q=Canopy+by+Hilton+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d6)">
+              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">ION City Hotel</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Boutique · ~$808 · ★8.8</span><a class="sleep-book" href="https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-row" style="border-left-color:var(--d6)">
+              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Center Hotels Arnarhvoll</span></div>
+              <div class="sleep-bot"><span class="sleep-meta">Design · ~$805 · ★8.2</span><a class="sleep-book" href="https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking" target="_blank">Book →</a></div>
+            </div>
+            <div class="sleep-note">Sep 18 departure is 4:50 PM. All three hotels offer luggage storage — check out at noon, explore the city bag-free, collect bags en route to KEF.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Day 7 ── -->
+    <div class="card">
+      <div class="ch" style="border-top:3px solid var(--d7)">
+        <div class="ch-n">Day 7</div>
+        <div class="ch-t" style="color:#9a9a9a">Departure</div>
+      </div>
+      <div class="cb">
+        <div class="r">
+          <div class="rm"><span class="seq-num">1</span><span class="rl">AM</span><span class="ra">Morning pastry</span></div>
+          <div class="rt">Te og kaffi · Hygge · Kaffihús Vesturbæjar</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">2</span><span class="rl">drive</span><span class="ra">KEF — ~45 min</span></div>
+        </div>
+        <div class="r book">
+          <div class="rm"><span class="seq-num">3</span><span class="rl">opt</span><span class="ra">Blue Lagoon</span></div>
+          <div class="rt">If late flight and missed it on Day 1. Book ahead.</div>
+        </div>
+        <div class="sep"></div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">4</span><span class="rl">note</span><span class="ra">Book well in advance</span></div>
+          <div class="rt">Silfra (weeks ahead) · Blue Lagoon · Sky Lagoon · Rental car — get SUV/4x4 for flexibility.</div>
+        </div>
+        <div class="r">
+          <div class="rm"><span class="seq-num">5</span><span class="rl">note</span><span class="ra">Best aurora nights: 2, 3, 4</span></div>
+          <div class="rt">Need KP index 2+ and clear skies. My Aurora Forecast + vedur.is. Gets dark ~9:30–10pm.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+</div><!-- /cards -->
+
+<script>
+(function () {
+  // ── Map init ──
+  const map = L.map('map', { zoomControl: true });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  // ── Coordinates ──
+  const C = {
+    kef:      [63.9850, -22.6056],
+    bluelag:  [63.8799, -22.4486],
+    rvk:      [64.1466, -21.9426],
+    thing:    [64.2559, -20.9038],
+    fridh:    [64.1001, -20.3167],
+    geysir:   [64.3117, -20.3022],
+    gullfoss: [64.3271, -20.1199],
+    hvera:    [64.0000, -21.1833],
+    selfoss:  [63.9333, -21.0000],
+    skoga:    [63.5322, -19.5117],
+    reynisf:  [63.4067, -19.0444],
+    vik:      [63.4188, -18.9996],
+    jokul:    [64.0784, -16.2306],
+    diamond:  [64.0644, -16.1950],
+    kirkju:   [63.7847, -18.0534],
+    skylag:   [64.1120, -22.0040],
+    vestur:   [64.1503, -21.9614],
+  };
+
+  const dc = {
+    1: '#2a5298', 2: '#c8960c', 3: '#1a7a6e',
+    4: '#8bbecf', 5: '#7b68ac', 6: '#c4622d', 7: '#7a7a7a'
+  };
+
+  // ── Route segments ──
+  const segs = [
+    // Day 1
+    { d: 1, p: [C.kef,      C.bluelag],   t: '5 min'   },
+    { d: 1, p: [C.bluelag,  C.rvk],       t: '50 min'  },
+    // Day 2
+    { d: 2, p: [C.rvk,      C.thing],     t: '45 min'  },
+    { d: 2, p: [C.thing,    C.fridh],     t: '30 min'  },
+    { d: 2, p: [C.fridh,    C.geysir],    t: '20 min'  },
+    { d: 2, p: [C.geysir,   C.gullfoss],  t: '15 min'  },
+    { d: 2, p: [C.gullfoss, C.hvera],     t: '1 hr'    },
+    { d: 2, p: [C.hvera,    C.selfoss],   t: '20 min'  },
+    // Day 3
+    { d: 3, p: [C.selfoss,  C.hvera],     t: '15 min'  },
+    { d: 3, p: [C.hvera,    C.skoga],     t: '1 hr'    },
+    { d: 3, p: [C.skoga,    C.reynisf],   t: '30 min'  },
+    { d: 3, p: [C.reynisf,  C.vik],       t: '10 min'  },
+    // Day 4
+    { d: 4, p: [C.vik,      C.jokul],     t: '2.5 hrs' },
+    { d: 4, p: [C.jokul,    C.diamond],   t: '5 min'   },
+    { d: 4, p: [C.diamond,  C.kirkju],    t: '1.5 hrs' },
+    // Day 5
+    { d: 5, p: [C.kirkju,   C.rvk],       t: '3.5 hrs' },
+    { d: 5, p: [C.rvk,      C.skylag],    t: '15 min'  },
+    // Day 6
+    { d: 6, p: [C.skylag,   C.vestur],    t: '15 min'  },
+    // Day 7
+    { d: 7, p: [C.vestur,   C.kef],       t: '50 min'  },
+  ];
+
+  segs.forEach(function (s) {
+    // Draw polyline segment
+    L.polyline(s.p, {
+      color: dc[s.d],
+      weight: 3,
+      opacity: 0.88,
+      lineJoin: 'round',
+      lineCap: 'round'
+    }).addTo(map);
+
+    // Drive-time label at midpoint
+    const mid = [
+      (s.p[0][0] + s.p[1][0]) / 2,
+      (s.p[0][1] + s.p[1][1]) / 2
+    ];
+    L.marker(mid, {
+      icon: L.divIcon({
+        className: '',
+        html: '<span class="dl">' + s.t + '</span>',
+        iconSize: [0, 0],
+        iconAnchor: [0, 0]
+      }),
+      interactive: false,
+      keyboard: false
+    }).addTo(map);
+  });
+
+  // ── Stop markers with popups ──
+  const stops = [
+    {
+      c: C.kef, d: 1,
+      n: 'Keflavík Airport',
+      i: 'Arrival &amp; departure hub. Blue Lagoon is just 5 min away — great way to decompress straight off the plane if pre-booked. Otherwise ~45 min drive to Reykjavík.'
+    },
+    {
+      c: C.bluelag, d: 1,
+      n: 'Blue Lagoon',
+      i: 'Iconic geothermal spa. Book weeks in advance — sells out. Also an option on Day 5 afternoon or departure morning.'
+    },
+    {
+      c: C.rvk, d: 1,
+      n: 'Reykjavík',
+      i: 'Capital base for Days 1, 5 &amp; 6. Hallgrímskirkja tower views, Harpa concert hall, waterfront walk, Bæjarins Beztu hot dog. Check aurora nightly: My Aurora Forecast + vedur.is.'
+    },
+    {
+      c: C.thing, d: 2,
+      n: 'Þingvellir / Silfra',
+      i: 'Walk the rift valley between the North American &amp; Eurasian tectonic plates — Iceland\'s parliament founded here 930 AD. Silfra snorkeling: crystal-clear glacial water, 100m+ visibility, dry suits provided. Book weeks ahead via Dive.is.'
+    },
+    {
+      c: C.fridh, d: 2,
+      n: 'Friðheimar',
+      i: 'Working tomato farm with a restaurant inside the greenhouse. Lunch stop on the Golden Circle.'
+    },
+    {
+      c: C.geysir, d: 2,
+      n: 'Geysir',
+      i: 'Watch Strokkur erupt every few minutes. Walk the bubbling geothermal field.'
+    },
+    {
+      c: C.gullfoss, d: 2,
+      n: 'Gullfoss',
+      i: 'One of Europe\'s most powerful waterfalls — a two-tiered drop into a glacier canyon.'
+    },
+    {
+      c: C.hvera, d: 2,
+      n: 'Hveragerði',
+      i: 'Hot spring town. Drive through on Day 2 returning south. Start the Reykjadalur hike from here on Day 3 morning.'
+    },
+    {
+      c: C.selfoss, d: 2,
+      n: 'Selfoss',
+      i: 'Good base for Day 2 overnight. Famous hot dog stand — worth a stop on Day 3 morning.'
+    },
+    {
+      c: C.skoga, d: 3,
+      n: 'Skógafoss',
+      i: 'Walk to the base or climb the stairs alongside for a top view. One of Iceland\'s most striking waterfalls.'
+    },
+    {
+      c: C.reynisf, d: 3,
+      n: 'Reynisfjara',
+      i: '⚠ Black sand beach with dramatic basalt columns and sea stacks. Do NOT approach the water — sneaker waves are unpredictable and have killed tourists. Stay well back.'
+    },
+    {
+      c: C.vik, d: 3,
+      n: 'Vík',
+      i: 'Southernmost village in Iceland. Far from light pollution — excellent northern lights base. Best aurora nights are Days 2, 3, and 4.'
+    },
+    {
+      c: C.jokul, d: 4,
+      n: 'Jökulsárlón',
+      i: 'Glacier lagoon with icebergs drifting through. Seals hang out here. ~2.5 hrs east of Vík — start early for the best light.'
+    },
+    {
+      c: C.diamond, d: 4,
+      n: 'Diamond Beach',
+      i: 'Cross the road from Jökulsárlón — ice chunks washed up on black sand. Stunning visual contrast, five minutes from the lagoon.'
+    },
+    {
+      c: C.kirkju, d: 4,
+      n: 'Kirkjubæjarklaustur',
+      i: 'Interstellar filming location. Dinner stop on the way back — get the arctic char (bleikja). Genuinely great.'
+    },
+    {
+      c: C.skylag, d: 5,
+      n: 'Sky Lagoon',
+      i: 'Infinity-edge geothermal lagoon with ocean views. Closer to Reykjavík than Blue Lagoon and less touristy. Book ahead.'
+    },
+    {
+      c: C.vestur, d: 6,
+      n: 'Vesturbæjarlaug',
+      i: '⚠ Public pool with hot pots and great saunas — a proper local experience. Must shower naked with soap before entering. Enforced by attendants.'
+    },
+  ];
+
+  // Assign sequential stop numbers per day
+  var _dayCounts = {};
+  stops.forEach(function(s) {
+    if (!_dayCounts[s.d]) _dayCounts[s.d] = 0;
+    s.seq = ++_dayCounts[s.d];
+  });
+
+  stops.forEach(function (s) {
+    var col = dc[s.d];
+    L.marker(s.c, {
+      icon: L.divIcon({
+        className: '',
+        html: '<div class="sm" style="background:' + col + '">' + s.seq + '</div>',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+      })
+    })
+    .bindPopup(
+      '<div class="p-day" style="color:' + col + '">Day ' + s.d + ' · Stop ' + s.seq + '</div>' +
+      '<div class="p-name">' + s.n + '</div>' +
+      '<div class="p-tip">' + s.i + '</div>',
+      { maxWidth: 240 }
+    )
+    .addTo(map);
+  });
+
+  // ── Hotel data ──
+  var hotelData = [
+    // Night 1 — Day 1 color
+    { night:1, day:1, date:'Sep 12', rec:true,  urgent:false, nl:false, airbnb:false,
+      name:'Apótek Hotel by Keahotels', type:'Boutique Hotel',
+      price:'~$826–$970/night (2 rooms)', score:'8.8 · Location 9.6',
+      desc:'Converted historic pharmacy on Austurstræti. Stunning interior, dramatic bar, right in the heart of downtown.',
+      c:[64.1483,-21.9397], book:'https://www.google.com/search?q=Apotek+Hotel+Reykjavik+booking' },
+    { night:1, day:1, date:'Sep 12', rec:false, urgent:false, nl:false, airbnb:false,
+      name:'ION City Hotel', type:'Boutique Hotel (Design Hotels)',
+      price:'~$906/night (2 rooms)', score:'8.8 · Location 9.8',
+      desc:'Member of Design Hotels on Laugavegur. Ultra-central, very design-forward.',
+      c:[64.1462,-21.9328], book:'https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking' },
+    { night:1, day:1, date:'Sep 12', rec:false, urgent:false, nl:false, airbnb:false,
+      name:'Center Hotels Arnarhvoll', type:'Design Hotel',
+      price:'~$728–$850/night (2 rooms)', score:'8.2 · Location 9.5',
+      desc:'Harbour and bay views, steps from Harpa Concert Hall. Good option for Nights 5–6 too for simplicity.',
+      c:[64.1489,-21.9310], book:'https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking' },
+    { night:1, day:1, date:'Sep 12', rec:false, urgent:false, nl:false, airbnb:false,
+      name:'City Center Hotel', type:'Boutique Hotel',
+      price:'$527/night (2 rooms)', score:'8.7 · Location 9.5',
+      desc:'250 ft from downtown, Reykjavík 101. Excellent value.',
+      c:[64.1470,-21.9350], book:'https://www.google.com/search?q=City+Center+Hotel+Reykjavik+booking' },
+
+    // Night 2 — Day 2 color
+    { night:2, day:2, date:'Sep 13', rec:true,  urgent:true,  nl:true,  airbnb:false,
+      name:'Hotel Rangá', type:'Luxury Lodge (SLH)',
+      price:'~$2,821/night (2 rooms, breakfast incl.)', score:'9.0 · 4.7 SLH',
+      desc:"Iceland's premier northern lights hotel. Private observatory with resident astronomers. Staff wake you if lights appear. Geothermal outdoor hot tubs on Route 1.",
+      c:[63.8333,-20.5667], book:'https://www.hotelranga.is' },
+    { night:2, day:2, date:'Sep 13', rec:false, urgent:false, nl:false, airbnb:false,
+      name:'Hotel Kanslarinn Hella', type:'Hotel',
+      price:'~$456/night (2 rooms)', score:'8.4 · Location 8.5',
+      desc:'Fallback if Rangá fully booked. In Hella village, basic but solid.',
+      c:[63.8258,-20.4072], book:'https://www.google.com/search?q=Hotel+Kanslarinn+Hella+Iceland+booking' },
+
+    // Night 3 — Day 3 color
+    { night:3, day:3, date:'Sep 14', rec:true,  urgent:true,  nl:false, airbnb:false,
+      name:'Black Beach Suites', type:'Boutique Suites',
+      price:'~$491–$588/unit (book 2 units)', score:'9.3 Booking · 4.92 Airbnb',
+      desc:'Top-rated in Vík on both Booking.com and Airbnb — rare dual-platform dominance. Sea views, modern suites. 2.1 miles from village.',
+      c:[63.4060,-19.0650], book:'https://www.google.com/search?q=Black+Beach+Suites+Vik+Iceland+booking' },
+    { night:3, day:3, date:'Sep 14', rec:false, urgent:true,  nl:false, airbnb:false,
+      name:'Hótel Kría', type:'Design Hotel',
+      price:'~$950/night (2 rooms, breakfast incl.)', score:'8.9 · Location 9.3',
+      desc:'Stunning modern architecture, 850 ft from beach, breakfast included. Right in Vík village.',
+      c:[63.4188,-18.9996], book:'https://www.google.com/search?q=Hotel+Kria+Vik+Iceland+booking' },
+    { night:3, day:3, date:'Sep 14', rec:false, urgent:false, nl:false, airbnb:true,
+      name:'Seljalandsfoss Horizons', type:'Airbnb',
+      price:'~$892/night', score:'4.91 ★ (1,686 reviews)',
+      desc:'Stunning property right near Seljalandsfoss waterfall — on your Day 3 route. High volume + near-perfect score signals genuinely exceptional quality.',
+      c:[63.6156,-19.9886], book:'https://www.google.com/search?q=Seljalandsfoss+Horizons+Airbnb+Iceland' },
+
+    // Night 4 — Day 4 color
+    { night:4, day:4, date:'Sep 15', rec:true,  urgent:true,  nl:false, airbnb:false,
+      name:'Hotel Klaustur', type:'Hotel',
+      price:'~$1,188–$1,306/night (2 rooms)', score:'9.0 · Staff 9.6',
+      desc:'Best-reviewed in Klaustur. Restaurant on-site, Travel Proud certified. Easy early departure for Day 5. Wins on every measure for this remote location.',
+      c:[63.7847,-18.0534], book:'https://www.google.com/search?q=Hotel+Klaustur+Kirkjubaejarklaustur+booking' },
+    { night:4, day:4, date:'Sep 15', rec:true,  urgent:false, nl:false, airbnb:true,
+      name:'Kársstaðir', type:'Farmhouse (Airbnb)',
+      price:'~$1,273/night', score:'4.99 ★ (245 reviews)',
+      desc:'Extraordinary 4.99/5 from 245 reviews — almost unheard of on Airbnb. Remote wilderness farm near Klaustur. Solitude in the highlands.',
+      c:[63.7650,-18.1200], book:'https://www.google.com/search?q=Karsstadir+Airbnb+Iceland' },
+    { night:4, day:4, date:'Sep 15', rec:false, urgent:false, nl:false, airbnb:true,
+      name:'Cabin 3 G5', type:'Farm Cabin (Airbnb)',
+      price:'~$708/night (3BR, fits group)', score:'4.87 ★ (386 reviews)',
+      desc:'3-bedroom cabin, private, fits whole group. Pay $0 today, free cancellation.',
+      c:[63.7750,-18.0800], book:'https://www.google.com/search?q=Cabin+G5+Klaustur+Airbnb+Iceland' },
+
+    // Nights 5+6 — Day 5 color
+    { night:56, day:5, date:'Sep 16–17', rec:true,  urgent:true,  nl:false, airbnb:false,
+      name:'Canopy by Hilton Reykjavík', type:'Design Hotel',
+      price:'~$927/night (2 rooms, breakfast incl.)', score:'9.2 · Location 9.8',
+      desc:'Highest location score in Reykjavík. Bar on-site, sustainability certified. Design-forward despite Hilton brand. Best overall pick for final 2 nights.',
+      c:[64.1478,-21.9360], book:'https://www.google.com/search?q=Canopy+by+Hilton+Reykjavik+booking' },
+    { night:56, day:5, date:'Sep 16–17', rec:false, urgent:false, nl:false, airbnb:false,
+      name:'ION City Hotel', type:'Boutique Hotel (Design Hotels)',
+      price:'~$808/night (2 rooms)', score:'8.8 · Location 9.8',
+      desc:'Same great location as Night 1 option. Design Hotels member, Laugavegur address. Consistent quality across both stays.',
+      c:[64.1462,-21.9328], book:'https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking' },
+    { night:56, day:5, date:'Sep 16–17', rec:false, urgent:false, nl:false, airbnb:false,
+      name:'Center Hotels Arnarhvoll', type:'Design Hotel',
+      price:'~$805/night (2 rooms)', score:'8.2 · Location 9.5',
+      desc:'Harbour views. Great if booked for Night 1 too — same hotel both stays for simplicity. Luggage storage available on departure day.',
+      c:[64.1489,-21.9310], book:'https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking' },
+  ];
+
+  // ── Render hotel markers ──
+  // Radial spread for clustered nights; Night 56 nudged north to separate from Night 1
+  function radialOffset(lat, lng, idx, total, radiusM) {
+    var angle = (2 * Math.PI * idx / Math.max(total, 1)) - Math.PI / 2;
+    var dLat = (radiusM / 111320) * Math.cos(angle);
+    var dLng = (radiusM / (111320 * Math.cos(lat * Math.PI / 180))) * Math.sin(angle);
+    return [lat + dLat, lng + dLng];
+  }
+
+  var byNight = {};
+  hotelData.forEach(function (h) {
+    if (!byNight[h.night]) byNight[h.night] = [];
+    byNight[h.night].push(h);
+  });
+
+  hotelData.forEach(function (h) {
+    var col = dc[h.day];
+    var group = byNight[h.night];
+    var idx = group.indexOf(h);
+    var total = group.length;
+    var optNum = idx + 1;
+
+    var lat = h.c[0], lng = h.c[1];
+    // Spread Reykjavík clusters; Night 56 shifted north so it doesn't stack on Night 1
+    if (h.night === 1) {
+      var p = radialOffset(64.1476, -21.9349, idx, total, 220);
+      lat = p[0]; lng = p[1];
+    } else if (h.night === 56) {
+      var p = radialOffset(64.1510, -21.9349, idx, total, 175);
+      lat = p[0]; lng = p[1];
+    }
+
+    var sz = h.rec ? 22 : 18;
+    var outerSz = sz + 4;
+    var half = outerSz / 2;
+    var innerContent = optNum + (h.rec ? '★' : '');
+    var penta = 'polygon(50% 0%,97.5% 34.5%,79.4% 90.5%,20.6% 90.5%,2.5% 34.5%)';
+    var outerStyle = [
+      'width:' + outerSz + 'px',
+      'height:' + outerSz + 'px',
+      'clip-path:' + penta,
+      'background:#ff7a1e',
+      'display:flex',
+      'align-items:center',
+      'justify-content:center',
+      'cursor:pointer',
+      'box-sizing:border-box'
+    ].join(';');
+    var innerStyle = [
+      'width:' + sz + 'px',
+      'height:' + sz + 'px',
+      'clip-path:' + penta,
+      'background:' + col,
+      'display:flex',
+      'align-items:center',
+      'justify-content:center',
+      'font-size:8px',
+      'color:#fff',
+      'line-height:1',
+      'flex-shrink:0'
+    ].join(';');
+    var urgAttr = h.urgent ? ' class="hm-urgent"' : '';
+    var html = '<div' + urgAttr + ' style="' + outerStyle + '"><div style="' + innerStyle + '">' + innerContent + '</div></div>';
+
+    var nightLabel = h.night === 56
+      ? 'Nights 5–6 · ' + h.date + ' · Option ' + optNum + ' of ' + total
+      : 'Night ' + h.night + ' · ' + h.date + ' · Option ' + optNum + ' of ' + total;
+    var recTag   = h.rec     ? '⭐ ' : '';
+    var urgTag   = h.urgent  ? ' <span style="color:#e06050;font-size:10px;font-weight:600">‼ BOOK TODAY</span>' : '';
+    var nlTag    = h.nl      ? '<div style="margin-top:4px;color:#8bbecf;font-size:10px">🌌 Northern lights wake-up service included</div>' : '';
+    var abTag    = h.airbnb  ? ' <span style="font-size:9px;background:rgba(255,80,70,.15);color:#e08070;padding:1px 4px;border-radius:3px">Airbnb</span>' : '';
+
+    var popup =
+      '<div class="p-day" style="color:' + col + '">' + nightLabel + '</div>' +
+      '<div class="p-name">' + recTag + h.name + abTag + urgTag + '</div>' +
+      '<div class="p-tip"><em>' + h.type + '</em> · ' + h.price + '<br>★ ' + h.score + '<br>' + h.desc + nlTag + '</div>' +
+      '<div style="margin-top:6px"><a href="' + h.book + '" target="_blank" ' +
+        'style="color:#7aa8c8;font-size:11px;text-decoration:none">Book →</a></div>';
+
+    L.marker([lat, lng], {
+      icon: L.divIcon({
+        className: '',
+        html: html,
+        iconSize: [outerSz, outerSz],
+        iconAnchor: [half, half]
+      })
+    }).bindPopup(popup, { maxWidth: 270 }).addTo(map);
+  });
+
+  // ── Fit to route bounds ──
+  map.fitBounds(
+    L.latLngBounds(Object.values(C)),
+    { padding: [28, 28] }
+  );
+})();
+</script>
+</body>
+</html>
