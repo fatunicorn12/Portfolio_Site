@@ -119,7 +119,37 @@ var bookEntries = {
   },
 
   day4: {
-    title: "Day 4 · Glacier Lagoon",
+    title: "Day 4 · Vík · More to Explore",
+    entries: [
+      {
+        tag: "Fun Fact",
+        border: "blue",
+        title: "Dyrhólaey was born from the sea",
+        body: "The 120-meter promontory is the southernmost point of mainland Iceland, formed by an underwater eruption. Its giant sea arch is wide enough to sail a boat through — pilots have flown small planes under it. The name means roughly \"the hill island with the door hole.\""
+      },
+      {
+        tag: "Fun Fact",
+        border: "blue",
+        title: "Puffins nest in these cliffs",
+        body: "Dyrhólaey is a major Atlantic puffin colony in summer. By mid-September most have already left for the open ocean, where they spend winter bobbing on the waves — but scan the cliffs anyway. The lighthouse on top dates to 1927."
+      },
+      {
+        tag: "Kolfinna Says",
+        border: "yellow",
+        title: "Kvernufoss is the secret one",
+        body: "Everyone stops at Skógafoss — almost no one walks the short trail next door to Kvernufoss. You can scramble in behind the falling water. It's about a 15-minute walk from the Skógar museum parking lot. Wear waterproof shoes, the path gets muddy."
+      },
+      {
+        tag: "Claude Recommends",
+        border: "green",
+        title: "A slow day is the point",
+        body: "You already saw Reynisfjara on Day 3 — go back today for the cave alcoves and basalt organ pipes at a different tide. A relaxed Vík day is a gift on a road trip. Stock up at the Krónan in town before tomorrow; the stretch east toward the glacier lagoon is remote."
+      }
+    ]
+  },
+
+  day5: {
+    title: "Day 5 · Glacier Lagoon",
     entries: [
       {
         tag: "Fun Fact",
@@ -144,30 +174,6 @@ var bookEntries = {
         border: "yellow",
         title: "On Kirkjubæjarklaustur",
         body: "Cool waterfalls and really good local arctic char (bleikja). Hotel Klaustur restaurant for dinner tonight — get the fish."
-      }
-    ]
-  },
-
-  day5: {
-    title: "Day 5 · Back to Reykjavík",
-    entries: [
-      {
-        tag: "Fun Fact",
-        border: "blue",
-        title: "Sky Lagoon's seven-step ritual",
-        body: "Hot pool → cold plunge → sauna → steam → mist → shower → back to pool. Follow it in order. The infinity edge looks directly out over the North Atlantic — on a clear day the horizon is uninterrupted ocean. Unlike the Blue Lagoon, the water is clear."
-      },
-      {
-        tag: "Kolfinna Says",
-        border: "yellow",
-        title: "Dinner options tonight",
-        body: "Hosiló: different menu every week, great vibe. Lóla: really good Italian, get the focaccia with ricotta. OTO: Michelin-recognized Italian-Japanese, honestly not that expensive compared to others. All walkable from Canopy."
-      },
-      {
-        tag: "Claude Recommends",
-        border: "green",
-        title: "Landmannalaugar (if you took the detour)",
-        body: "The F-roads are mandatory 4x4, not advisory. The rhyolite mountains are literally technicolor — pink, green, yellow, purple from mineral deposits in the rock. Most visitors to Iceland never see this area. If you went, you earned a long Sky Lagoon soak."
       }
     ]
   },
