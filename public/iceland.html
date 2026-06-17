@@ -722,25 +722,15 @@
         <div class="r"><div class="rm"><span class="rl">3:00p</span><span class="ra">Drive to Reynisfjara</span></div><div class="rt">~30 min.</div></div>
         <div class="r warn" data-fly="stop-reynisf"><div class="rm"><span class="rl">3:30p</span><span class="ra">Reynisfjara black sand beach ↑map</span><div class="row-puck" style="background:#1a7a6e" title="Stop · Reynisfjara">3</div></div><div class="rt">⚠ Stay well back from water. Sneaker waves kill. Basalt columns. ~45 min.</div></div>
         <div class="r"><div class="rm"><span class="rl">4:30p</span><span class="ra">Drive to Vík</span></div><div class="rt">~10 min.</div></div>
-        <div class="r" data-fly="stop-vik"><div class="rm"><span class="rl">4:45p</span><span class="ra">Check in · Vík area hotel ↑map</span><div class="row-puck" style="background:#1a7a6e" title="Stop · Vík">4</div></div></div>
+        <div class="r" data-fly="hotel-kria"><div class="rm"><span class="rl">4:45p</span><span class="ra">Check in · Hótel Kría ↑map</span><div class="row-puck hotel-confirmed" style="background:#1a7a6e" title="Confirmed hotel · Hótel Kría">✓</div></div></div>
         <div class="r"><div class="rm"><span class="rl">6:30p</span><span class="ra">Dinner in Vík</span></div><div class="rt">Sudur-Vík restaurant or Halldórskaffi.</div></div>
         <div class="r"><div class="rm"><span class="rl">9:30p</span><span class="ra">Aurora check</span></div><div class="rt">Excellent location — dark, coastal, minimal light pollution.</div></div>
         <div class="sep"></div>
         <div class="sleep-wrap">
-          <button class="sleep-toggle" style="border-color:var(--d3)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 3 options</button>
-          <div class="sleep-list">
-            <div class="sleep-row rec" style="border-left-color:var(--d3)" data-fly="hotel-black-beach">
-              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Black Beach Suites ↑map</span><span class="badge-urgent">‼ URGENT</span><div class="row-puck hotel" style="background:#1a7a6e" title="Hotel option · Black Beach Suites">⭐</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">~$491–$588/unit · ★9.3</span><a class="sleep-book" href="https://www.google.com/search?q=Black+Beach+Suites+Vik+Iceland+booking" target="_blank">Book →</a></div>
-            </div>
-            <div class="sleep-row" style="border-left-color:var(--d3)" data-fly="hotel-kria">
-              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">Hótel Kría ↑map</span><span class="badge-urgent">‼ URGENT</span><div class="row-puck hotel" style="background:#1a7a6e" title="Hotel option · Hótel Kría">2</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">~$950 incl. bkfst · ★8.9</span><a class="sleep-book" href="https://www.google.com/search?q=Hotel+Kria+Vik+Iceland+booking" target="_blank">Book →</a></div>
-            </div>
-            <div class="sleep-row" style="border-left-color:var(--d3)" data-fly="hotel-seljalandsfoss-horizons">
-              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Seljalandsfoss Horizons ↑map</span><span class="badge-airbnb">Airbnb</span><div class="row-puck hotel" style="background:#1a7a6e" title="Hotel option · Seljalandsfoss Horizons">3</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">~$892 · ★4.91 (1,686)</span><a class="sleep-book" href="https://www.google.com/search?q=Seljalandsfoss+Horizons+Airbnb+Iceland" target="_blank">Book →</a></div>
-            </div>
+          <div class="sleep-confirmed-block" data-fly="hotel-kria" style="cursor:pointer" title="Fly to map">
+            <div class="sleep-confirmed-label">BOOKED · Night 3</div>
+            <div class="sleep-confirmed-name" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">Hótel Kría <div class="row-puck hotel-confirmed" style="background:#22c55e;flex-shrink:0" title="Confirmed · Hótel Kría">✓</div></div>
+            <div class="sleep-confirmed-meta">Vík · Breakfast incl. · ★8.9</div>
           </div>
         </div>
       </div>
@@ -764,15 +754,19 @@
         <div class="dur"><span class="dur-line">— — — — —</span><span class="dur-label">driving ~1.5 hrs</span></div>
         <div class="r" data-fly="stop-kirkju"><div class="rm"><span class="rl">3:30p</span><span class="ra">Arrive Kirkjubæjarklaustur ↑map</span><div class="row-puck" style="background:#8bbecf" title="Stop · Kirkjubæjarklaustur">3</div></div><div class="rt">Interstellar filming location. Worth a short walk around.</div></div>
         <div class="r"><div class="rm"><span class="rl">4:00p</span><span class="ra">Fjaðrárgljúfur canyon</span></div><div class="rt">Optional — 10 min from Klaustur. Stunning glacial canyon, easy walk.</div></div>
-        <div class="r"><div class="rm"><span class="rl">5:30p</span><span class="ra">Check in · Klaustur or Vík area</span></div></div>
+        <div class="r"><div class="rm"><span class="rl">5:30p</span><span class="ra">Check in · Hótel Kría or Hotel Klaustur</span></div></div>
         <div class="r"><div class="rm"><span class="rl">7:00p</span><span class="ra">Dinner</span></div><div class="rt">Hotel Klaustur restaurant — get the arctic char (bleikja).</div></div>
         <div class="r"><div class="rm"><span class="rl">9:30p</span><span class="ra">Aurora check</span></div><div class="rt">Far from city lights — one of the best spots on the trip.</div></div>
         <div class="sep"></div>
         <div class="sleep-wrap">
-          <button class="sleep-toggle" style="border-color:var(--d4)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 3 options</button>
+          <button class="sleep-toggle" style="border-color:var(--d4)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — 4 options</button>
           <div class="sleep-list">
+            <div class="sleep-row rec" style="border-left-color:var(--d4)" data-fly="hotel-kria">
+              <div class="sleep-top"><span class="sleep-num">👀</span><span class="sleep-name">Hótel Kría (night 2 here?) ↑map</span><span class="sleep-meta" style="color:#8bbecf">Considering</span><div class="row-puck hotel" style="background:#8bbecf" title="Hotel option · Hótel Kría">👀</div></div>
+              <div class="sleep-bot"><span class="sleep-meta">Vík · ~$950 incl. bkfst · ★8.9</span><a class="sleep-book" href="https://www.google.com/search?q=Hotel+Kria+Vik+Iceland+booking" target="_blank">Book →</a></div>
+            </div>
             <div class="sleep-row rec" style="border-left-color:var(--d4)" data-fly="hotel-klaustur-n4">
-              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Hotel Klaustur ↑map</span><span class="badge-urgent">‼ URGENT</span><div class="row-puck hotel" style="background:#8bbecf" title="Hotel option · Hotel Klaustur">⭐</div></div>
+              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Hotel Klaustur ↑map</span><div class="row-puck hotel" style="background:#8bbecf" title="Hotel option · Hotel Klaustur">⭐</div></div>
               <div class="sleep-bot"><span class="sleep-meta">~$1,188–$1,306 · ★9.0</span><a class="sleep-book" href="https://hotelklaustur.is" target="_blank">Book →</a></div>
             </div>
             <div class="sleep-row rec" style="border-left-color:var(--d4)" data-fly="hotel-karsstadir">
@@ -802,32 +796,17 @@
         <div class="r"><div class="rm"><span class="rl">12:00p</span><span class="ra">Arrive Reykjavík area</span></div><div class="rt">If staying Klaustur, arrive mid-morning instead — more time in city.</div></div>
         <div class="r book" data-fly="stop-skylag"><div class="rm"><span class="rl">1:00p</span><span class="ra">Sky Lagoon ↑map</span><div class="row-puck" style="background:#7b68ac" title="Stop · Sky Lagoon">1</div></div><div class="rt">Infinity edge, ocean views. ~2 hrs. Book ahead.</div></div>
         <div class="dur"><span class="dur-line">— — — — —</span><span class="dur-label">at Sky Lagoon ~2 hrs</span></div>
-        <div class="r" data-fly="hotel-canopy"><div class="rm"><span class="rl">3:30p</span><span class="ra">Check in · Canopy by Hilton ↑map</span><div class="row-puck hotel-confirmed" style="background:#7b68ac" title="Confirmed hotel · Canopy by Hilton">✓</div></div></div>
+        <div class="r" data-fly="hotel-klaustur-n5"><div class="rm"><span class="rl">5:30p</span><span class="ra">Check in · Hotel Klaustur ↑map</span><div class="row-puck hotel-confirmed" style="background:#7b68ac" title="Confirmed hotel · Hotel Klaustur">✓</div></div></div>
         <div class="blank"></div>
         <div class="r"><div class="rm"><span class="rl">5:00p</span><span class="ra">Explore downtown</span></div><div class="rt">Laugavegur street, shops, cafes.</div></div>
         <div class="r"><div class="rm"><span class="rl">7:30p</span><span class="ra">Dinner</span></div><div class="rt">OTO (Michelin, book ahead) · Hosiló · Lóla (Italian, get the focaccia).</div></div>
         <div class="r"><div class="rm"><span class="rl">10:00p</span><span class="ra">Aurora check</span></div><div class="rt">Drive 20 min out if conditions good.</div></div>
         <div class="sep"></div>
         <div class="sleep-wrap">
-          <button class="sleep-toggle" style="border-color:var(--d5)" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">🛏 Where to sleep — Dad's pick + 3 Reykjavík options</button>
-          <div class="sleep-list">
-            <div class="sleep-row rec" style="border-left-color:var(--d5)" data-fly="hotel-klaustur-n5">
-              <div class="sleep-top"><span class="sleep-num">★</span><span class="sleep-name">Hotel Klaustur (Dad's pick) ↑map</span><span class="sleep-meta" style="color:#9d8ccc">breaks up the drive</span><div class="row-puck hotel" style="background:#7b68ac" title="Hotel option · Hotel Klaustur">★</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">4-star · ★9.0 · NL wake-up service</span><a class="sleep-book" href="https://hotelklaustur.is" target="_blank">Book →</a></div>
-            </div>
-            <div class="sleep-note">Staying here means a relaxed 3.5 hr drive into Reykjavík on 9/17 morning rather than a 5+ hr push at end of glacier day.</div>
-            <div class="sleep-row rec" style="border-left-color:var(--d5); margin-top:8px;" data-fly="hotel-canopy-n5">
-              <div class="sleep-top"><span class="sleep-num">1.</span><span class="sleep-name">⭐ Canopy by Hilton Reykjavík ↑map</span><span class="badge-urgent">‼ BOOK TODAY</span><div class="row-puck hotel" style="background:#7b68ac" title="Hotel option · Canopy by Hilton">⭐</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">Design · ~$927 incl. bkfst · ★9.2</span><a class="sleep-book" href="https://www.google.com/search?q=Canopy+by+Hilton+Reykjavik+booking" target="_blank">Book →</a></div>
-            </div>
-            <div class="sleep-row" style="border-left-color:var(--d5)" data-fly="hotel-ion">
-              <div class="sleep-top"><span class="sleep-num">2.</span><span class="sleep-name">ION City Hotel ↑map</span><div class="row-puck hotel" style="background:#7b68ac" title="Hotel option · ION City Hotel">2</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">Boutique · ~$808 · ★8.8</span><a class="sleep-book" href="https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking" target="_blank">Book →</a></div>
-            </div>
-            <div class="sleep-row" style="border-left-color:var(--d5)" data-fly="hotel-arnarhvoll">
-              <div class="sleep-top"><span class="sleep-num">3.</span><span class="sleep-name">Center Hotels Arnarhvoll ↑map</span><div class="row-puck hotel" style="background:#7b68ac" title="Hotel option · Arnarhvoll">3</div></div>
-              <div class="sleep-bot"><span class="sleep-meta">Design · ~$805 · ★8.2</span><a class="sleep-book" href="https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking" target="_blank">Book →</a></div>
-            </div>
+          <div class="sleep-confirmed-block" data-fly="hotel-klaustur-n5" style="cursor:pointer" title="Fly to map">
+            <div class="sleep-confirmed-label">BOOKED · Night 5</div>
+            <div class="sleep-confirmed-name" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">Hotel Klaustur <div class="row-puck hotel-confirmed" style="background:#22c55e;flex-shrink:0" title="Confirmed · Hotel Klaustur">✓</div></div>
+            <div class="sleep-confirmed-meta">Kirkjubæjarklaustur · 4-star · ★9.0 · NL wake-up service</div>
           </div>
         </div>
       </div>
