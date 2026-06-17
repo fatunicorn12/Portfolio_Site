@@ -606,8 +606,8 @@
       <div class="lr"><div class="ll" style="background:var(--d1)"></div>Day 1 — Arrival</div>
       <div class="lr"><div class="ll" style="background:var(--d2)"></div>Day 2 — Golden Circle</div>
       <div class="lr"><div class="ll" style="background:var(--d3)"></div>Day 3 — South Coast</div>
-      <div class="lr"><div class="ll" style="background:var(--d4)"></div>Day 4 — Glacier Lagoon</div>
-      <div class="lr"><div class="ll" style="background:var(--d5)"></div>Day 5 — Return</div>
+      <div class="lr"><div class="ll" style="background:var(--d4)"></div>Day 4 — Vík</div>
+      <div class="lr"><div class="ll" style="background:var(--d5)"></div>Day 5 — Glacier Lagoon</div>
       <div class="lr"><div class="ll" style="background:var(--d6)"></div>Day 6 — Reykjavík</div>
       <div class="lr"><div class="ll" style="background:var(--d7)"></div>Day 7 — Departure</div>
       <div class="lr lr-confirmed"><div class="ll" style="background:var(--confirmed)"></div>✓ Confirmed hotel</div>
@@ -970,10 +970,10 @@ document.addEventListener('DOMContentLoaded', function() {
     skoga:       [63.5322, -19.5117],
     reynisf:     [63.4067, -19.0444],
     vik:         [63.4188, -18.9996],
+    dyrholaey:   [63.4058, -19.1275],
     jokul:       [64.0784, -16.2306],
     diamond:     [64.0644, -16.1950],
     kirkju:      [63.7847, -18.0534],
-    skylag:      [64.1120, -22.0040],
     vestur:      [64.1503, -21.9614],
     auroraigloo: [63.8400, -20.3800],
   };
@@ -995,12 +995,18 @@ document.addEventListener('DOMContentLoaded', function() {
     { d: 3, p: [C.hvera,       C.skoga],        t: '1 hr'    },
     { d: 3, p: [C.skoga,       C.reynisf],      t: '30 min'  },
     { d: 3, p: [C.reynisf,     C.vik],          t: '10 min'  },
-    { d: 4, p: [C.vik,         C.jokul],        t: '2.5 hrs' },
-    { d: 4, p: [C.jokul,       C.diamond],      t: '5 min'   },
-    { d: 4, p: [C.diamond,     C.kirkju],       t: '1.5 hrs' },
-    { d: 5, p: [C.kirkju,      C.rvk],          t: '3.5 hrs' },
-    { d: 5, p: [C.rvk,         C.skylag],       t: '15 min'  },
-    { d: 6, p: [C.skylag,      C.vestur],       t: '15 min'  },
+    // Day 4 — local Vík exploration loop
+    { d: 4, p: [C.vik,         C.dyrholaey],    t: '15 min'  },
+    { d: 4, p: [C.dyrholaey,   C.skoga],        t: '30 min'  },
+    { d: 4, p: [C.skoga,       C.reynisf],      t: '40 min'  },
+    { d: 4, p: [C.reynisf,     C.vik],          t: '10 min'  },
+    // Day 5 — Glacier Lagoon out-and-back, ending at Klaustur
+    { d: 5, p: [C.vik,         C.jokul],        t: '2.5 hrs' },
+    { d: 5, p: [C.jokul,       C.diamond],      t: '5 min'   },
+    { d: 5, p: [C.diamond,     C.kirkju],       t: '1.5 hrs' },
+    // Day 6 — drive Klaustur → Reykjavík, then local pool
+    { d: 6, p: [C.kirkju,      C.rvk],          t: '3.5 hrs' },
+    { d: 6, p: [C.rvk,         C.vestur],       t: '15 min'  },
     { d: 7, p: [C.vestur,      C.kef],          t: '50 min'  },
   ];
 
@@ -1029,10 +1035,10 @@ document.addEventListener('DOMContentLoaded', function() {
     { c: C.skoga,       d:3, n:'Skógafoss',                        i:'Climb the stairs for a top view.',                                                                             flyKey:'stop-skoga' },
     { c: C.reynisf,     d:3, n:'Reynisfjara',                      i:'⚠ Black sand beach. Stay back from water — sneaker waves.',                                                    flyKey:'stop-reynisf' },
     { c: C.vik,         d:3, n:'Vík',                              i:'Dark, coastal — excellent aurora spot.',                                                                        flyKey:'stop-vik' },
-    { c: C.jokul,       d:4, n:'Jökulsárlón',                      i:'Glacier lagoon — icebergs and seals. ~2.5 hrs east of Vík.',                                                   flyKey:'stop-jokul' },
-    { c: C.diamond,     d:4, n:'Diamond Beach',                    i:'Ice chunks on black sand. Just across from Jökulsárlón.',                                                       flyKey:'stop-diamond' },
-    { c: C.kirkju,      d:4, n:'Kirkjubæjarklaustur',              i:"Interstellar filming location. Arctic char dinner. Dad's suggested 9/16 overnight. Hotel Klaustur ★9.0 here.", flyKey:'stop-kirkju' },
-    { c: C.skylag,      d:5, n:'Sky Lagoon',                       i:'Infinity-edge geothermal lagoon. Book ahead.',                                                                  flyKey:'stop-skylag' },
+    { c: C.dyrholaey,   d:4, n:'Dyrhólaey',                        i:'Basalt sea arch &amp; lighthouse. Panoramic black-sand views.',                                                 flyKey:'stop-dyrhólaey' },
+    { c: C.jokul,       d:5, n:'Jökulsárlón',                      i:'Glacier lagoon — icebergs and seals. ~2.5 hrs east of Vík.',                                                   flyKey:'stop-jokul' },
+    { c: C.diamond,     d:5, n:'Diamond Beach',                    i:'Ice chunks on black sand. Just across from Jökulsárlón.',                                                       flyKey:'stop-diamond' },
+    { c: C.kirkju,      d:5, n:'Kirkjubæjarklaustur',              i:'Interstellar filming location. Arctic char dinner. ✓ BOOKED — Night 5 (9/16). Hotel Klaustur ★9.0 here.',       flyKey:'stop-kirkju' },
     { c: C.vestur,      d:6, n:'Vesturbæjarlaug',                  i:'⚠ Must shower before entering. Local pool, hot pots.',                                                         flyKey:'stop-vestur' },
   ];
 
@@ -1064,6 +1070,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var confirmedHotels = [
     { c:[64.1478,-21.9360], day:1, nights:'Nights 1 & 6 · 9/12 & 9/17', name:'Canopy by Hilton Reykjavík', detail:'Design Hotel · Downtown · Breakfast incl. · ★9.2', flyKey:'hotel-canopy' },
     { c:[63.8400,-20.3800], day:2, nights:'Night 2 · 9/13',              name:'Aurora Igloo South',          detail:'Stekkatún 1 · Aurora igloo experience 🌌',       flyKey:'hotel-aurora-igloo' },
+    { c:[63.4188,-18.9996], day:3, nights:'Night 3 · 9/14',              name:'Hótel Kría',                  detail:'Vík · Breakfast incl. · ★8.9',                   flyKey:'hotel-kria' },
+    { c:[63.7847,-18.0534], day:5, nights:'Night 5 · 9/16',              name:'Hotel Klaustur',              detail:'Kirkjubæjarklaustur · 4-star · ★9.0 · NL wake-up service', flyKey:'hotel-klaustur-n5' },
   ];
 
   confirmedHotels.forEach(function(h) {
@@ -1085,31 +1093,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // All unbooked hotel options — grouped by night for radial spreading
   var hotelOptions = [
-    // Night 3 — Vík area
-    { night:3, day:3, opt:1, total:3, base:[63.4188,-18.9996],
-      name:'Black Beach Suites', detail:'Suites · ~$491–$588/unit · ★9.3', book:'https://www.google.com/search?q=Black+Beach+Suites+Vik+Iceland+booking', rec:true, urgent:true, flyKey:'hotel-black-beach' },
-    { night:3, day:3, opt:2, total:3, base:[63.4188,-18.9996],
-      name:'Hótel Kría', detail:'Design · ~$950 incl. bkfst · ★8.9', book:'https://www.google.com/search?q=Hotel+Kria+Vik+Iceland+booking', rec:false, urgent:true, flyKey:'hotel-kria' },
-    { night:3, day:3, opt:3, total:3, base:[63.6156,-19.9886],
-      name:'Seljalandsfoss Horizons', detail:'Airbnb · ~$892 · ★4.91 (1,686 reviews)', book:'https://www.google.com/search?q=Seljalandsfoss+Horizons+Airbnb+Iceland', rec:false, urgent:false, flyKey:'hotel-seljalandsfoss-horizons' },
-
-    // Night 4 — Kirkjubæjarklaustur area
+    // Night 4 — Kirkjubæjarklaustur area (still unconfirmed)
     { night:4, day:4, opt:1, total:3, base:[63.7847,-18.0534],
       name:'Hotel Klaustur', detail:'4-star · ~$1,188–$1,306 · ★9.0 · NL wake-up service', book:'https://hotelklaustur.is', rec:true, urgent:true, flyKey:'hotel-klaustur-n4' },
     { night:4, day:4, opt:2, total:3, base:[63.7847,-18.0534],
       name:'Kársstaðir', detail:'Airbnb Farmhouse · ~$1,273 · ★4.99 (245 reviews)', book:'https://www.google.com/search?q=Karsstadir+Airbnb+Iceland', rec:true, urgent:false, flyKey:'hotel-karsstadir' },
     { night:4, day:4, opt:3, total:3, base:[63.7847,-18.0534],
       name:'Cabin 3 G5', detail:'Airbnb 3BR Cabin · ~$708 · ★4.87', book:'https://www.google.com/search?q=Cabin+G5+Klaustur+Airbnb+Iceland', rec:false, urgent:false, flyKey:'hotel-cabin-g5' },
-
-    // Night 5 — Dad's pick (Klaustur) or Reykjavík options
-    { night:5, day:5, opt:1, total:4, base:[63.7847,-18.0700],
-      name:"Hotel Klaustur (Dad's pick)", detail:"4-star · ★9.0 · Breaks up the drive back · NL wake-up service", book:'https://hotelklaustur.is', rec:true, urgent:false, flyKey:'hotel-klaustur-n5' },
-    { night:5, day:5, opt:2, total:4, base:[64.1510,-21.9360],
-      name:'Canopy by Hilton Reykjavík', detail:'Design · ~$927 incl. bkfst · ★9.2', book:'https://www.google.com/search?q=Canopy+by+Hilton+Reykjavik+booking', rec:true, urgent:true, flyKey:'hotel-canopy-n5' },
-    { night:5, day:5, opt:3, total:4, base:[64.1510,-21.9360],
-      name:'ION City Hotel', detail:'Boutique (Design Hotels) · ~$808 · ★8.8', book:'https://www.google.com/search?q=ION+City+Hotel+Reykjavik+booking', rec:false, urgent:false, flyKey:'hotel-ion' },
-    { night:5, day:5, opt:4, total:4, base:[64.1510,-21.9360],
-      name:'Center Hotels Arnarhvoll', detail:'Design · ~$805 · ★8.2', book:'https://www.google.com/search?q=Center+Hotels+Arnarhvoll+Reykjavik+booking', rec:false, urgent:false, flyKey:'hotel-arnarhvoll' },
   ];
 
   function radialOffset(lat, lng, idx, total, radiusM) {
@@ -1123,20 +1113,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var col = dc[h.day];
     // Spread clustered markers with radial offset
     var lat = h.base[0], lng = h.base[1];
-    // Reykjavík night-5 options need spreading
-    if (h.night === 5 && h.opt > 1) {
-      var p = radialOffset(64.1510, -21.9360, h.opt - 2, 3, 180);
-      lat = p[0]; lng = p[1];
-    }
     // Night 4 Klaustur trio
     if (h.night === 4) {
       var p4 = radialOffset(63.7847, -18.0534, h.opt - 1, 3, 200);
       lat = p4[0]; lng = p4[1];
-    }
-    // Night 3 Vík pair (Seljalandsfoss has its own coords already)
-    if (h.night === 3 && h.opt <= 2) {
-      var p3 = radialOffset(63.4188, -18.9996, h.opt - 1, 2, 200);
-      lat = p3[0]; lng = p3[1];
     }
 
     var sz=20, outerSz=24, half=12;
