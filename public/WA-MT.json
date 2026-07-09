@@ -1,0 +1,855 @@
+{
+  "trip": {
+    "title": "Washington → Montana",
+    "subtitle": "9 Days · Seattle to Glacier",
+    "duration_days": 9,
+    "start_city": "Seattle, WA",
+    "end_city": "Kalispell, MT"
+  },
+
+  "color_palette": [
+    { "day": 1, "hex": "#4A7C6F", "name": "Puget Teal",      "note": "Seattle — deep Pacific Northwest evergreen water" },
+    { "day": 2, "hex": "#6B8F5E", "name": "Rainforest Moss", "note": "Drive east through Cascade foothills" },
+    { "day": 3, "hex": "#3D6B8A", "name": "Diablo Glacial",  "note": "Turquoise glacial lake, alpine blue" },
+    { "day": 4, "hex": "#8B7355", "name": "High Desert Tan", "note": "Transition east, dry side of Cascades" },
+    { "day": 5, "hex": "#5C7A6E", "name": "Coeur d'Alene Pine","note": "Idaho lake country" },
+    { "day": 6, "hex": "#7A8B6F", "name": "Apgar Shoreline",  "note": "Arriving Glacier, Lake McDonald" },
+    { "day": 7, "hex": "#4A6FA5", "name": "Logan Pass Sky",   "note": "Going-to-the-Sun Road, alpine blue" },
+    { "day": 8, "hex": "#8B6914", "name": "St. Mary Prairie", "note": "East Glacier, Great Plains gold" },
+    { "day": 9, "hex": "#6B4F3A", "name": "Whitefish Dusk",   "note": "Mountain town warmth, celebration night" }
+  ],
+
+  "days": [
+    {
+      "day": 1,
+      "title": "Seattle",
+      "theme": "City Kickoff",
+      "stops": [
+        {
+          "name": "Pike Place Market",
+          "lat": 47.608895,
+          "lng": -122.340607,
+          "type": "attraction",
+          "popup_tip": "Go early (7–9am) before crowds — the fish throwers are worth it and the original Starbucks is steps away."
+        },
+        {
+          "name": "Capitol Hill Neighborhood",
+          "lat": 47.622600,
+          "lng": -122.319900,
+          "type": "neighborhood",
+          "popup_tip": "Best bar-hopping neighborhood in Seattle — Pine Street and Broadway have everything you need for night one."
+        },
+        {
+          "name": "Kerry Park Viewpoint",
+          "lat": 47.629480,
+          "lng": -122.360062,
+          "type": "viewpoint",
+          "popup_tip": "Classic Seattle skyline with Mt. Rainier in the background — best at golden hour or at night."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "Ace Hotel Seattle",
+          "area": "Belltown",
+          "price_per_night_usd": 220,
+          "stars": 3.5,
+          "vibe": "Cool, design-forward, walkable to everything",
+          "booking_url": "https://www.google.com/search?q=Ace+Hotel+Seattle+book",
+          "recommended": true,
+          "urgent": false
+        },
+        {
+          "name": "The Edgewater Hotel",
+          "area": "Waterfront",
+          "price_per_night_usd": 340,
+          "stars": 4,
+          "vibe": "Splurge pick — built over Elliott Bay, rooms feel like a lodge over the water",
+          "booking_url": "https://www.google.com/search?q=Edgewater+Hotel+Seattle+book",
+          "recommended": false,
+          "urgent": false
+        },
+        {
+          "name": "Graduate Seattle",
+          "area": "University District",
+          "price_per_night_usd": 170,
+          "stars": 3,
+          "vibe": "Budget-friendly, fun design, solid location",
+          "booking_url": "https://www.google.com/search?q=Graduate+Hotel+Seattle+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Seattle Has More Boats Than Any US City",
+          "body": "Seattle has more boats per capita than any other city in the United States. The city sits between Puget Sound and Lake Washington, giving it over 50 miles of navigable freshwater and saltwater shoreline. Keep an eye out for floatplanes landing on the water downtown — they're a normal form of transport here."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Skip the Space Needle, Do This Instead",
+          "body": "Kerry Park gives you the exact same skyline view as the Space Needle — for free — and you get the Space Needle *in* the photo. Go at sunset. Save the $40 ticket money for dinner in Capitol Hill instead."
+        },
+        {
+          "tag": "Recommends",
+          "border": "green",
+          "title": "Dinner: Serious Pie in Belltown",
+          "body": "Tom Douglas's Serious Pie on Virginia St is one of the best casual dinners in the city — wood-fired pizzas with serious ingredients, not precious about it. No reservations, expect a short wait, worth every minute. Pair it with a walk through Belltown after."
+        },
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Pike Place Almost Became a Parking Lot",
+          "body": "In the 1960s the city planned to demolish Pike Place Market entirely and replace it with a hotel and parking garage. A grassroots campaign led by architect Victor Steinbrueck saved it through a 1971 ballot initiative. The market has been continuously operating since 1907."
+        }
+      ],
+      "warnings": []
+    },
+
+    {
+      "day": 2,
+      "title": "Seattle → North Cascades",
+      "theme": "Into the Mountains",
+      "drive_segment": {
+        "origin": "Seattle",
+        "destination": "Colonial Creek Campground, North Cascades",
+        "estimated_time": "2.5 hrs",
+        "distance_miles": 130,
+        "notes": "Take Highway 20 east — one of the most scenic drives in Washington. Stop at Diablo Lake Overlook before descending to camp."
+      },
+      "stops": [
+        {
+          "name": "Diablo Lake Overlook",
+          "lat": 48.713900,
+          "lng": -121.095000,
+          "type": "viewpoint",
+          "popup_tip": "The turquoise color comes from glacial 'rock flour' suspended in the water — pull over here before descending, the view is extraordinary."
+        },
+        {
+          "name": "Colonial Creek Campground",
+          "lat": 48.696700,
+          "lng": -121.101900,
+          "type": "campground",
+          "popup_tip": "Right on Diablo Lake — wake up to that turquoise water. Book site loop South for the best lake-facing spots."
+        },
+        {
+          "name": "North Cascades Visitor Center",
+          "lat": 48.673600,
+          "lng": -121.266200,
+          "type": "visitor_center",
+          "popup_tip": "Stop here first to grab your park map and check trail conditions before heading deeper into the park."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "Colonial Creek Campground (NPS)",
+          "area": "Inside North Cascades NP",
+          "price_per_night_usd": 20,
+          "stars": null,
+          "vibe": "Right on Diablo Lake — this is the move, camping here is the experience",
+          "booking_url": "https://www.recreation.gov/camping/campgrounds/232493",
+          "recommended": true,
+          "urgent": true
+        },
+        {
+          "name": "North Cascades Lodge at Stehekin",
+          "area": "Stehekin (boat/floatplane access only)",
+          "price_per_night_usd": 180,
+          "stars": 3,
+          "vibe": "Remote and special but requires ferry — only if you want to go deep",
+          "booking_url": "https://www.google.com/search?q=North+Cascades+Lodge+Stehekin+book",
+          "recommended": false,
+          "urgent": false
+        },
+        {
+          "name": "Winthrop Inn",
+          "area": "Winthrop, WA (east side of park)",
+          "price_per_night_usd": 140,
+          "stars": 3,
+          "vibe": "Quirky Western-themed town, good fallback if camping fills",
+          "booking_url": "https://www.google.com/search?q=Winthrop+Inn+WA+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Diablo Lake Is Naturally That Color",
+          "body": "The electric turquoise of Diablo Lake isn't a filter or an algae bloom. Glaciers grinding rock in the surrounding peaks produce ultra-fine particles called 'rock flour' that stay suspended in the water and scatter sunlight into that impossible blue-green. The color changes intensity with the seasons as snowmelt varies."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Stop at Gorge Creek Falls on Highway 20",
+          "body": "About 3 miles before Diablo Lake there's a pullout for Gorge Creek Falls — a narrow waterfall dropping into a deep gorge. Easy 2-minute walk from the road and most people drive right past it. Don't be most people."
+        },
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "North Cascades Has More Glaciers Than Any Other Lower 48 Park",
+          "body": "North Cascades National Park contains over 300 glaciers — more than any other park in the contiguous United States. The park is so rugged and remote that some areas have never been formally surveyed. Less than 1% of visitors ever leave the Highway 20 corridor."
+        }
+      ],
+      "warnings": [
+        {
+          "level": "info",
+          "title": "Bear Country Begins Here",
+          "body": "North Cascades is active black and grizzly bear habitat. Use bear canisters or hang food properly at camp. Never leave food in your tent or car. The campground has bear boxes — use them."
+        }
+      ]
+    },
+
+    {
+      "day": 3,
+      "title": "North Cascades — Maple Pass Loop",
+      "theme": "Best Ridge Hike in the Northwest",
+      "stops": [
+        {
+          "name": "Rainy Pass Trailhead (Maple Pass Loop)",
+          "lat": 48.515800,
+          "lng": -120.735600,
+          "type": "trailhead",
+          "popup_tip": "Start counterclockwise (left at the fork) for the best dramatic ridge reveal — you hit the high point with a full panorama rather than approaching it gradually."
+        },
+        {
+          "name": "Lake Ann Viewpoint",
+          "lat": 48.510200,
+          "lng": -120.693400,
+          "type": "viewpoint",
+          "popup_tip": "Halfway point of the loop — brilliant alpine lake below the ridge. Stop here for lunch if the weather holds."
+        },
+        {
+          "name": "Maple Pass Summit Ridge",
+          "lat": 48.514400,
+          "lng": -120.702700,
+          "type": "summit",
+          "popup_tip": "The high point of the loop at 6,970 ft — 360-degree views of peaks and lakes. On a clear August day you can see for 50 miles."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "Colonial Creek Campground (Night 2)",
+          "area": "Inside North Cascades NP",
+          "price_per_night_usd": 20,
+          "stars": null,
+          "vibe": "Stay put — two nights at Colonial Creek makes sense around the hike",
+          "booking_url": "https://www.recreation.gov/camping/campgrounds/232493",
+          "recommended": true,
+          "urgent": true
+        },
+        {
+          "name": "Sun Mountain Lodge",
+          "area": "Winthrop, WA",
+          "price_per_night_usd": 260,
+          "stars": 4,
+          "vibe": "Splurge option — beautiful lodge on a hill with valley views, good restaurant",
+          "booking_url": "https://www.google.com/search?q=Sun+Mountain+Lodge+Winthrop+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Recommends",
+          "border": "green",
+          "title": "Maple Pass: Go Counterclockwise, Always",
+          "body": "Every trail guide says you can do Maple Pass either direction, but counterclockwise is dramatically better. You climb gradually through forest, emerge onto the ridge with a full alpine panorama in one reveal, then descend past Lake Ann. The other way shows you the ending first. Start left at the trailhead junction."
+        },
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "This Area Was Nearly a Ski Resort",
+          "body": "In the 1970s, there were serious proposals to develop a massive ski resort at nearby Early Winters and Sandy Butte just down the highway. Decades of environmental opposition ultimately killed the project, ensuring the surrounding North Cascades high country remained undeveloped."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Start the Hike Before 8am in August",
+          "body": "The Rainy Pass trailhead parking lot fills completely by 9–10am on summer weekends and rangers turn cars away. Get there early, beat the crowd, and you'll essentially have the ridge to yourselves for the first hour. Bring layers — the ridge can be 20°F colder than the trailhead."
+        }
+      ],
+      "warnings": [
+        {
+          "level": "warning",
+          "title": "Exposed Ridge — Weather Moves Fast",
+          "body": "The Maple Pass ridge is fully exposed with no shelter for 3+ miles. Afternoon thunderstorms are common in August. Start early, watch the western sky, and turn back if you see anvil-shaped clouds building. Lightning at elevation is no joke."
+        }
+      ]
+    },
+
+    {
+      "day": 4,
+      "title": "North Cascades → Coeur d'Alene",
+      "theme": "Transition East",
+      "drive_segment": {
+        "origin": "Colonial Creek Campground, WA",
+        "destination": "Coeur d'Alene, ID",
+        "estimated_time": "5.5 hrs",
+        "distance_miles": 310,
+        "notes": "Drive Highway 20 east through the dry side of the Cascades, then across eastern Washington. Stop in Spokane before the final push to CDA."
+      },
+      "stops": [
+        {
+          "name": "Spokane, WA",
+          "lat": 47.658780,
+          "lng": -117.426048,
+          "type": "city",
+          "popup_tip": "Good lunch stop — Spokane is underrated, grab food downtown near Riverside Ave before the final push to CDA."
+        },
+        {
+          "name": "Coeur d'Alene City Beach",
+          "lat": 47.677800,
+          "lng": -116.780900,
+          "type": "beach",
+          "popup_tip": "One of the most beautiful urban lake beaches in the US — clean, sandy, and the lake water is warm enough to swim in August."
+        },
+        {
+          "name": "Coeur d'Alene Resort Boardwalk",
+          "lat": 47.678600,
+          "lng": -116.779200,
+          "type": "attraction",
+          "popup_tip": "Walk the floating boardwalk at sunset — the lake views are exceptional and there are good bars and restaurants within steps."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "The Coeur d'Alene Resort",
+          "area": "Lakefront downtown",
+          "price_per_night_usd": 280,
+          "stars": 4,
+          "vibe": "The splurge night of the first half — right on the lake, beautiful property, good restaurant",
+          "booking_url": "https://www.google.com/search?q=Coeur+d+Alene+Resort+book",
+          "recommended": true,
+          "urgent": false
+        },
+        {
+          "name": "The Blackwell Hotel",
+          "area": "Downtown CDA",
+          "price_per_night_usd": 190,
+          "stars": 3.5,
+          "vibe": "Historic boutique hotel right in downtown, excellent alternative to the big resort.",
+          "booking_url": "https://www.google.com/search?q=The+Blackwell+Hotel+Coeur+d+Alene+book",
+          "recommended": false,
+          "urgent": false
+        },
+        {
+          "name": "Resort City Inn",
+          "area": "Downtown CDA",
+          "price_per_night_usd": 140,
+          "stars": 3,
+          "vibe": "Budget-moderate pick, perfectly walkable to the lake and downtown.",
+          "booking_url": "https://www.google.com/search?q=Resort+City+Inn+Coeur+d+Alene+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "The Drive Changes Ecosystems in Real Time",
+          "body": "Crossing the Cascades on Highway 20 is one of the most dramatic ecological transitions you can drive. The west side of the mountains receives 100+ inches of rain annually and looks like a rainforest. By the time you reach the Okanogan Valley on the east side, you're in near-desert receiving less than 12 inches. Same mountain range, 30 miles apart."
+        },
+        {
+          "tag": "Recommends",
+          "border": "green",
+          "title": "Dinner: Beverly's Restaurant at the Resort",
+          "body": "Beverly's on the 7th floor of the Coeur d'Alene Resort has floor-to-ceiling lake views and is legitimately excellent. It's a splurge but this is your decompression night between the parks — worth it. Book a table before you arrive."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Jump in the Lake — It's Warmer Than You Think",
+          "body": "Lake Coeur d'Alene reaches 70–75°F in August, which is genuinely warm for a mountain lake. The city beach has a roped swim area. This is the last night before serious wilderness — enjoy the comfort."
+        }
+      ],
+      "warnings": []
+    },
+
+    {
+      "day": 5,
+      "title": "Coeur d'Alene → Glacier National Park",
+      "theme": "Arriving at the Crown",
+      "drive_segment": {
+        "origin": "Coeur d'Alene, ID",
+        "destination": "Apgar Campground, Glacier NP",
+        "estimated_time": "4 hrs",
+        "distance_miles": 240,
+        "notes": "Drive north on Highway 95 through Idaho into Montana. The Rockies appear on the horizon as you approach Kalispell."
+      },
+      "stops": [
+        {
+          "name": "Kalispell, MT",
+          "lat": 48.196116,
+          "lng": -114.312569,
+          "type": "city",
+          "popup_tip": "Stock up on groceries and supplies here — it's the last real town before the park and prices inside are higher."
+        },
+        {
+          "name": "Lake McDonald",
+          "lat": 48.575000,
+          "lng": -113.912600,
+          "type": "lake",
+          "popup_tip": "The colorful painted stones on the lake bottom are famous — walk the shore at the lodge and look down through the crystal-clear water."
+        },
+        {
+          "name": "Apgar Campground",
+          "lat": 48.497100,
+          "lng": -113.986600,
+          "type": "campground",
+          "popup_tip": "Best-positioned campground in the park — at the foot of Lake McDonald, close to the Going-to-the-Sun Road entrance."
+        },
+        {
+          "name": "Apgar Village",
+          "lat": 48.496500,
+          "lng": -113.987200,
+          "type": "village",
+          "popup_tip": "Small cluster of shops and a restaurant at the west entrance — good for an evening meal and grabbing park passes."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "Apgar Campground (NPS)",
+          "area": "West Glacier, inside park",
+          "price_per_night_usd": 23,
+          "stars": null,
+          "vibe": "The right call — inside the park, close to the lake, great base for Day 6",
+          "booking_url": "https://www.recreation.gov/camping/campgrounds/251869",
+          "recommended": true,
+          "urgent": true
+        },
+        {
+          "name": "Lake McDonald Lodge",
+          "area": "Inside park, lakefront",
+          "price_per_night_usd": 230,
+          "stars": 3.5,
+          "vibe": "Historic 1913 lodge right on Lake McDonald — the most atmospheric lodging in the park",
+          "booking_url": "https://www.google.com/search?q=Lake+McDonald+Lodge+Glacier+book",
+          "recommended": false,
+          "urgent": true
+        },
+        {
+          "name": "Glacier Outdoor Center Cabins",
+          "area": "West Glacier, just outside park",
+          "price_per_night_usd": 175,
+          "stars": 3,
+          "vibe": "Good fallback if everything inside books up, rafting company on site",
+          "booking_url": "https://www.google.com/search?q=Glacier+Outdoor+Center+West+Glacier+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Glacier Had 150 Glaciers in 1850",
+          "body": "When the park was named in the early 1900s it contained roughly 150 active glaciers. Today fewer than 26 remain, and climate scientists project most will be gone within decades. The park is actively documenting the changes — the 'repeat photography' project has matched historic photos to current ones showing dramatic retreat."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Get Your Going-to-the-Sun Reservation Tonight",
+          "body": "Vehicle reservations for Going-to-the-Sun Road are required May 27–September 9 between 6am and 3pm. They open 60 days in advance at 8am MST on recreation.gov and sell out within minutes. If you don't have one, the alternative is arriving before 6am or after 3pm — which actually works fine and is less crowded."
+        },
+        {
+          "tag": "Recommends",
+          "border": "green",
+          "title": "Evening: Stones at Lake McDonald Shore",
+          "body": "Before dinner, walk the shore of Lake McDonald at the lodge and look at the rocks underwater. The lake is so clear you can see the bottom in 10+ feet of water, and the stones are naturally multicolored from different geological formations — reds, greens, purples. It sounds mundane but it's genuinely one of the park's most memorable small moments."
+        }
+      ],
+      "warnings": [
+        {
+          "level": "warning",
+          "title": "This Is Grizzly Country — Act Accordingly",
+          "body": "Glacier has one of the highest grizzly bear densities in the lower 48. Carry bear spray on every hike, make noise on the trail, never hike alone in dense brush, and never run from a bear. Store all food in bear boxes at camp. Bear spray is available to rent at Apgar Village if you don't own it."
+        }
+      ]
+    },
+
+    {
+      "day": 6,
+      "title": "Glacier — Going-to-the-Sun Road + Highline Trail",
+      "theme": "The Day of the Trip",
+      "stops": [
+        {
+          "name": "Going-to-the-Sun Road — Logan Pass",
+          "lat": 48.696000,
+          "lng": -113.717700,
+          "type": "summit",
+          "popup_tip": "The highest point on the road at 6,646 ft — Continental Divide. This is the start of the Highline Trail. Park here (arrive before 9am or expect a wait)."
+        },
+        {
+          "name": "Highline Trail — Garden Wall",
+          "lat": 48.707200,
+          "lng": -113.731400,
+          "type": "trail",
+          "popup_tip": "The first half-mile has a chain bolted into the cliff face for balance — it sounds scary but is manageable, and opens immediately into an incredible alpine traverse."
+        },
+        {
+          "name": "Highline Trail — Granite Park Chalet",
+          "lat": 48.757800,
+          "lng": -113.757600,
+          "type": "backcountry_hut",
+          "popup_tip": "7.6 miles in — a historic stone chalet with a basic snack bar. Good turnaround point or rest stop. The views back toward Logan Pass from here are exceptional."
+        },
+        {
+          "name": "Hidden Lake Overlook",
+          "lat": 48.693600,
+          "lng": -113.740200,
+          "type": "viewpoint",
+          "popup_tip": "Short 2.7-mile RT hike from Logan Pass — a brilliant turquoise lake below a cirque. Do this before or after the Highline. Mountain goats are frequently visible on the ridgeline."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "Apgar Campground Night 2 (NPS)",
+          "area": "West Glacier, inside park",
+          "price_per_night_usd": 23,
+          "stars": null,
+          "vibe": "Stay put — two nights at Apgar makes sense around the big day",
+          "booking_url": "https://www.recreation.gov/camping/campgrounds/251869",
+          "recommended": true,
+          "urgent": true
+        },
+        {
+          "name": "Village Inn at Apgar",
+          "area": "Apgar Village, inside park",
+          "price_per_night_usd": 190,
+          "stars": 3,
+          "vibe": "Motel-style inside the park, steps from the lake — good upgrade from camping after a big hike day",
+          "booking_url": "https://www.google.com/search?q=Village+Inn+Apgar+Glacier+book",
+          "recommended": false,
+          "urgent": true
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Going-to-the-Sun Road Took 11 Years to Build",
+          "body": "Construction on Going-to-the-Sun Road began in 1921 and wasn't completed until 1932. Workers had to blast a shelf into sheer cliff faces in some sections using hand drills and dynamite in conditions with hundreds of feet of exposure. The road is now a National Historic Landmark and one of the most engineering-significant roads in the US."
+        },
+        {
+          "tag": "Recommends",
+          "border": "green",
+          "title": "Highline: Bring Trekking Poles If You Have Them",
+          "body": "The Highline Trail's famous exposed section is about 200 feet long with a fixed chain. It's not technically difficult but trekking poles dramatically reduce the psychological weight of it and help on the descent. Rent them at Apgar Village the night before if you don't own a pair."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Drive Sun Road at Dusk on the Way Back",
+          "body": "After your hike, if energy allows, drive a section of Going-to-the-Sun Road at golden hour heading west. The light on the peaks and the hanging valleys turns amber and pink in a way that the midday drive doesn't capture. Traffic thins out significantly after 5pm."
+        }
+      ],
+      "warnings": [
+        {
+          "level": "danger",
+          "title": "Highline Trail: Exposed Cliff Traverse",
+          "body": "The first section of the Highline Trail traverses a narrow ledge on a cliff face with a several-hundred-foot drop. There is a fixed chain to hold. Do not attempt if you have severe fear of heights or vertigo. Once past this section (~0.25 miles) the trail is straightforward alpine hiking. Do not attempt in wet or icy conditions."
+        },
+        {
+          "level": "warning",
+          "title": "Logan Pass Parking Fills by 8–9am",
+          "body": "Logan Pass has very limited parking and fills completely early on summer mornings. Plan to arrive before 8am, after 3pm, or take the free park shuttle from Apgar. If driving, have a backup plan."
+        }
+      ]
+    },
+
+    {
+      "day": 7,
+      "title": "Glacier — East Side",
+      "theme": "Where the Rockies Meet the Plains",
+      "drive_segment": {
+        "origin": "Apgar / West Glacier",
+        "destination": "St. Mary, MT (east side)",
+        "estimated_time": "1.5 hrs via Going-to-the-Sun Road",
+        "distance_miles": 50,
+        "notes": "Drive Sun Road over the Continental Divide — this IS the activity for the morning. Stop at every pullout. Arrive east side by midday for the afternoon hike."
+      },
+      "stops": [
+        {
+          "name": "Iceberg Lake Trailhead",
+          "lat": 48.799600,
+          "lng": -113.678700,
+          "type": "trailhead",
+          "popup_tip": "One of the most dramatic day hikes in the park — 9.7 miles RT to a lake that holds floating icebergs into August. Moderate grade, stunning payoff."
+        },
+        {
+          "name": "Iceberg Lake",
+          "lat": 48.844800,
+          "lng": -113.641800,
+          "type": "lake",
+          "popup_tip": "The lake sits in a near-circular amphitheater of 3,000-foot cliffs. Icebergs calve off the headwall and float through August. The water is a deep cobalt blue."
+        },
+        {
+          "name": "St. Mary / Wild Goose Island Overlook",
+          "lat": 48.688800,
+          "lng": -113.530300,
+          "type": "viewpoint",
+          "popup_tip": "The east side's signature view — a long, deep blue lake with Wild Goose Island in the center, framed by the Rockies. Best at morning or late afternoon light."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "St. Mary Campground (NPS)",
+          "area": "East Glacier, inside park",
+          "price_per_night_usd": 23,
+          "stars": null,
+          "vibe": "Large campground on St. Mary Lake — different landscape feel from the west side, more open and dramatic",
+          "booking_url": "https://www.recreation.gov/camping/campgrounds/251871",
+          "recommended": true,
+          "urgent": true
+        },
+        {
+          "name": "St. Mary Lodge & Resort",
+          "area": "St. Mary, MT",
+          "price_per_night_usd": 220,
+          "stars": 3,
+          "vibe": "Good lodge option on the east entrance, comfortable after a big day",
+          "booking_url": "https://www.google.com/search?q=St+Mary+Lodge+Glacier+book",
+          "recommended": false,
+          "urgent": false
+        },
+        {
+          "name": "Glacier Trailhead Cabins",
+          "area": "Babb, MT (near Many Glacier)",
+          "price_per_night_usd": 150,
+          "stars": 3,
+          "vibe": "Small cabin property close to the Many Glacier area, cozy and well-located",
+          "booking_url": "https://www.google.com/search?q=Glacier+Trailhead+Cabins+Babb+MT+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "The East Side Feels Like a Different Park",
+          "body": "The Continental Divide splits Glacier into two dramatically different landscapes. The west side is heavily forested, moody, Pacific-influenced. The east side is open prairie meeting sheer mountain walls — a landscape shaped by ferocious Chinook winds that can hit 100+ mph in winter. The light and scale on the east side is unlike anything on the west."
+        },
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Iceberg Lake Holds Ice Year-Round",
+          "body": "Iceberg Lake sits in a north-facing cirque so deeply shadowed that it holds floating icebergs through the summer. The water temperature rarely exceeds 34°F. Some brave (or foolish) visitors swim in it — most last about 30 seconds."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Many Glacier Area for Wildlife at Dawn",
+          "body": "The Many Glacier Valley just north of the Iceberg Lake trailhead is one of the best wildlife corridors in the park. Grizzlies, moose, and mountain goats are regularly spotted from the road in early morning. Drive slowly through the valley before your hike and keep binoculars handy."
+        }
+      ],
+      "warnings": [
+        {
+          "level": "warning",
+          "title": "Iceberg Lake: Bear Activity Is High in This Corridor",
+          "body": "The Iceberg Lake trail sees frequent bear activity. Hiking in groups of 3+ is strongly recommended. Make noise consistently on the trail, especially in brushy sections. Carry bear spray accessible on your hip, not buried in your pack."
+        }
+      ]
+    },
+
+    {
+      "day": 8,
+      "title": "Glacier → Whitefish",
+      "theme": "The Celebration Night",
+      "drive_segment": {
+        "origin": "St. Mary, MT",
+        "destination": "Whitefish, MT",
+        "estimated_time": "2.5 hrs",
+        "distance_miles": 125,
+        "notes": "Scenic drive back west along the southern boundary of the park via US-2 into the Flathead Valley. Whitefish is 25 min north of Kalispell."
+      },
+      "stops": [
+        {
+          "name": "Bowman Lake (Optional Detour)",
+          "lat": 48.830600,
+          "lng": -114.205900,
+          "type": "lake",
+          "popup_tip": "Remote lake in the North Fork area — long dirt road to get there but one of the most pristine and uncrowded lakes in the park. Worth the detour if you have time."
+        },
+        {
+          "name": "Whitefish, MT — Downtown",
+          "lat": 48.411200,
+          "lng": -114.335900,
+          "type": "town",
+          "popup_tip": "Central Ave is the main street — several good restaurants and bars within a few blocks. More alive than you'd expect for a small Montana town."
+        },
+        {
+          "name": "Whitefish Lake",
+          "lat": 48.432800,
+          "lng": -114.366700,
+          "type": "lake",
+          "popup_tip": "Clean mountain lake right at the edge of town — some hotels have direct beach access, good for a swim on arrival."
+        }
+      ],
+      "hotel_options": [
+        {
+          "name": "The Lodge at Whitefish Lake",
+          "area": "Lakefront, Whitefish",
+          "price_per_night_usd": 300,
+          "stars": 4,
+          "vibe": "The send-off splurge — beautiful lakefront property, great restaurant, private beach. This is the right ending.",
+          "booking_url": "https://www.google.com/search?q=Lodge+at+Whitefish+Lake+book",
+          "recommended": true,
+          "urgent": false
+        },
+        {
+          "name": "Grouse Mountain Lodge",
+          "area": "Whitefish",
+          "price_per_night_usd": 220,
+          "stars": 3.5,
+          "vibe": "Solid lodge-style property, good value, walkable to downtown",
+          "booking_url": "https://www.google.com/search?q=Grouse+Mountain+Lodge+Whitefish+book",
+          "recommended": false,
+          "urgent": false
+        },
+        {
+          "name": "Kandahar Lodge",
+          "area": "Whitefish Mountain Resort base",
+          "price_per_night_usd": 180,
+          "stars": 3,
+          "vibe": "Up on the mountain, quieter, good views — a bit removed from town",
+          "booking_url": "https://www.google.com/search?q=Kandahar+Lodge+Whitefish+book",
+          "recommended": false,
+          "urgent": false
+        }
+      ],
+      "journal_entries": [
+        {
+          "tag": "Recommends",
+          "border": "green",
+          "title": "Dinner: Tupelo Grille on Central Ave",
+          "body": "Tupelo Grille is the best restaurant in Whitefish — New Orleans-influenced American food in a warm, unpretentious setting. Known for their bison dishes and a serious whiskey list. Make a reservation for the last night — it books out in summer."
+        },
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Whitefish Is a Real Town, Not a Resort Trap",
+          "body": "Unlike a lot of gateway mountain towns, Whitefish has actual locals and a real community feel. The Remington Bar is a dive with a pool table and cheap Montana beers — a good spot to end the night without the resort pricing. A block off Central Ave."
+        },
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Whitefish Mountain Has the Longest Ski Season in Montana",
+          "body": "Whitefish Mountain Resort (formerly Big Mountain) typically runs from late November to mid-April and has one of the most consistent snow records in the Northern Rockies. In summer it operates as a mountain bike park with gondola access. Worth a quick gondola ride up for the views if you have a spare morning."
+        }
+      ],
+      "warnings": []
+    },
+
+    {
+      "day": 9,
+      "title": "Fly Home from Kalispell",
+      "theme": "Last Morning",
+      "drive_segment": {
+        "origin": "Whitefish, MT",
+        "destination": "Glacier Park International Airport (FCA), Kalispell",
+        "estimated_time": "20 min",
+        "distance_miles": 12,
+        "notes": "Easy drive south on Highway 93. Return rental car at FCA. Flights connect to LA and Austin via Salt Lake City, Seattle, or Denver."
+      },
+      "stops": [
+        {
+          "name": "Whitefish Lake State Park (Morning Swim)",
+          "lat": 48.432000,
+          "lng": -114.371000,
+          "type": "park",
+          "popup_tip": "If your flight is afternoon, a morning swim at the state park beach is the perfect send-off — quiet, free, and the lake is warm in August."
+        },
+        {
+          "name": "Glacier Park International Airport (FCA)",
+          "lat": 48.310500,
+          "lng": -114.255600,
+          "type": "airport",
+          "popup_tip": "Small but well-connected airport — Delta, United, and Alaska serve it in summer with direct routes to SLC, SEA, and DEN. Return your rental car here."
+        }
+      ],
+      "hotel_options": [],
+      "journal_entries": [
+        {
+          "tag": "Local Tip",
+          "border": "yellow",
+          "title": "Get to FCA 90 Minutes Early, Not More",
+          "body": "FCA is a small airport — TSA takes 10 minutes and there are only a few gates. No need to arrive 2+ hours ahead. Spend the extra time at the lake or grabbing breakfast in Whitefish at Buffalo Cafe on 3rd St — best breakfast in town."
+        },
+        {
+          "tag": "Fun Fact",
+          "border": "blue",
+          "title": "Montana Has 7.5 People Per Square Mile",
+          "body": "Montana is the 4th largest state by area but has a population density of just roughly 7.5 people per square mile. You've spent the last 9 days in one of the most sparsely populated corners of the lower 48. The nearest major city to Glacier National Park (Seattle) is farther away than London is from Paris."
+        }
+      ],
+      "warnings": []
+    }
+  ],
+
+  "confirmed_bookings": [],
+
+  "pre_book_items": [
+    {
+      "item": "Going-to-the-Sun Road Vehicle Reservation",
+      "url": "https://www.recreation.gov/timed-entry/10086910",
+      "urgency": "critical",
+      "window": "Opens 60 days in advance at 8am MST. Sells out in minutes.",
+      "notes": "Required May 27–Sep 9, 6am–3pm. Alternatively arrive before 6am or after 3pm."
+    },
+    {
+      "item": "Apgar Campground (Nights 5–6)",
+      "url": "https://www.recreation.gov/camping/campgrounds/251869",
+      "urgency": "critical",
+      "window": "Book immediately — August sites are nearly gone.",
+      "notes": "Loop B has the best sites. Book 2 consecutive nights."
+    },
+    {
+      "item": "Colonial Creek Campground (Nights 2–3)",
+      "url": "https://www.recreation.gov/camping/campgrounds/232493",
+      "urgency": "critical",
+      "window": "Book immediately.",
+      "notes": "Right on Diablo Lake. South loop preferred."
+    },
+    {
+      "item": "St. Mary Campground (Night 7)",
+      "url": "https://www.recreation.gov/camping/campgrounds/251871",
+      "urgency": "high",
+      "window": "Book soon — August fills fast on east side.",
+      "notes": "Large campground, more availability than Apgar but still books up."
+    },
+    {
+      "item": "Iceberg Lake Trail — No Permit Required",
+      "url": null,
+      "urgency": "low",
+      "window": "No advance reservation needed, just show up.",
+      "notes": "Start before 8am to beat crowds and heat."
+    },
+    {
+      "item": "Highline Trail — No Permit Required",
+      "url": null,
+      "urgency": "low",
+      "window": "No advance reservation needed.",
+      "notes": "Parking at Logan Pass is the constraint, not the trail itself."
+    },
+    {
+      "item": "One-Way Car Rental (Seattle → Kalispell)",
+      "url": "https://www.google.com/search?q=one+way+car+rental+Seattle+to+Kalispell+MT",
+      "urgency": "high",
+      "window": "Book 4–6 weeks out for best rates. One-way fees apply.",
+      "notes": "Budget, Enterprise, and Hertz all serve FCA. SUV or mid-size recommended for park roads."
+    },
+    {
+      "item": "Tupelo Grille Dinner Reservation (Night 8)",
+      "url": "https://www.google.com/search?q=Tupelo+Grille+Whitefish+reservation",
+      "urgency": "medium",
+      "window": "Book 2–3 weeks ahead.",
+      "notes": "Books out in summer, especially weekends."
+    }
+  ]
+}
