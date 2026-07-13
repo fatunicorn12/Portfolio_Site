@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cascade Loop — 5 Days</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#14261D;        /* deep evergreen — app chrome */
+    --pine-2:#1E3529;
+    --paper:#F2EEE3;       /* topo-map paper */
+    --paper-2:#E8E2D2;
+    --ink:#22302A;
+    --glacial:#2FA8A0;     /* Diablo Lake */
+    --granite:#8A93A0;
+    --d1:#5B7DB1;          /* Day colors */
+    --d2:#2FA8A0;
+    --d3:#D99A2B;
+    --d4:#C94F7C;
+    --d5:#4E7A4E;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Public Sans',system-ui,sans-serif;color:var(--ink);
+    background:var(--pine);display:flex;flex-direction:column;overflow:hidden;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    background:var(--pine);color:var(--paper);
+    padding:14px 20px 12px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    border-bottom:3px solid var(--glacial);
+  }
+  header h1{
+    font-family:'Big Shoulders Display',sans-serif;font-weight:800;
+    font-size:clamp(22px,3.4vw,34px);letter-spacing:.04em;text-transform:uppercase;
+  }
+  header .sub{font-size:12.5px;opacity:.75;letter-spacing:.06em;text-transform:uppercase}
+
+  /* ---------- Layout ---------- */
+  .app{flex:1;display:flex;min-height:0}
+  #map{flex:1;min-width:0}
+  .panel{
+    width:400px;max-width:46vw;background:var(--paper);
+    display:flex;flex-direction:column;min-height:0;
+    box-shadow:-6px 0 24px rgba(0,0,0,.35);
+  }
+
+  /* ---------- Day tabs (trail markers) ---------- */
+  .tabs{
+    display:flex;gap:6px;padding:12px 14px;background:var(--paper-2);
+    border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto;flex:none;
+  }
+  .tab{
+    flex:1;min-width:56px;border:none;cursor:pointer;background:transparent;
+    display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;
+    border-radius:8px;transition:background .15s;
+  }
+  .tab:hover{background:rgba(0,0,0,.05)}
+  .tab .blaze{
+    width:34px;height:38px;display:flex;align-items:center;justify-content:center;
+    font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:17px;color:#fff;
+    clip-path:polygon(50% 0,100% 24%,100% 100%,0 100%,0 24%); /* trail-blaze shield */
+    opacity:.45;transition:opacity .15s,transform .15s;
+  }
+  .tab .lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.6}
+  .tab.active .blaze{opacity:1;transform:translateY(-2px)}
+  .tab.active .lbl{opacity:1}
+  .tab:focus-visible{outline:2px solid var(--glacial);outline-offset:2px}
+
+  /* ---------- Trail log ---------- */
+  .log{flex:1;overflow-y:auto;padding:18px 20px 28px}
+  .day-head{margin-bottom:4px;display:flex;align-items:baseline;gap:10px}
+  .day-head h2{
+    font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:26px;
+    letter-spacing:.03em;text-transform:uppercase;
+  }
+  .day-head .date{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--granite)}
+  .day-sum{font-size:14px;line-height:1.55;margin:8px 0 16px;color:#3c4a43}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{
+    font-size:11px;font-weight:700;letter-spacing:.05em;padding:5px 10px;border-radius:99px;
+    background:var(--pine);color:var(--paper);
+  }
+  .chip.alt{background:transparent;color:var(--pine);border:1.5px solid var(--pine)}
+
+  .stop{
+    position:relative;padding:12px 14px 12px 40px;margin-bottom:10px;
+    background:#fff;border-radius:var(--radius);
+    border:1px solid rgba(0,0,0,.07);cursor:pointer;transition:transform .12s, box-shadow .12s;
+  }
+  .stop:hover{transform:translateX(3px);box-shadow:0 3px 12px rgba(0,0,0,.08)}
+  .stop::before{
+    content:attr(data-n);position:absolute;left:12px;top:14px;
+    width:20px;height:20px;border-radius:50%;background:var(--dc,#888);color:#fff;
+    font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  }
+  .stop h3{font-size:14.5px;font-weight:700;display:flex;justify-content:space-between;gap:8px}
+  .stop h3 .t{font-size:11px;font-weight:700;color:var(--granite);white-space:nowrap}
+  .stop p{font-size:13px;line-height:1.5;margin-top:4px;color:#4a5851}
+
+  .lodging{
+    margin-top:14px;padding:12px 14px;border-radius:var(--radius);
+    background:var(--pine);color:var(--paper);font-size:13px;line-height:1.5;
+  }
+  .lodging b{display:block;font-family:'Big Shoulders Display',sans-serif;font-weight:700;
+    font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;color:var(--glacial)}
+
+  /* ---------- Checklist ---------- */
+  .check{
+    flex:none;border-top:2px solid var(--pine);background:var(--paper-2);
+    padding:12px 20px 14px;max-height:34%;overflow-y:auto;
+  }
+  .check h4{
+    font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:15px;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;
+  }
+  .check label{
+    display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.45;
+    padding:4px 0;cursor:pointer;
+  }
+  .check input{margin-top:2px;accent-color:var(--glacial)}
+  .check label.done span{text-decoration:line-through;opacity:.5}
+
+  /* ---------- Leaflet popups ---------- */
+  .leaflet-popup-content-wrapper{border-radius:10px;font-family:'Public Sans',sans-serif}
+  .leaflet-popup-content{margin:12px 14px;font-size:13px;line-height:1.45}
+  .leaflet-popup-content b{font-size:14px}
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:760px){
+    .app{flex-direction:column}
+    #map{flex:none;height:44vh}
+    .panel{width:100%;max-width:none;flex:1;box-shadow:0 -6px 24px rgba(0,0,0,.35)}
+    .check{max-height:30%}
+    header{padding:10px 14px 9px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cascade Loop</h1>
+  <span class="sub">Seattle → North Cascades → Winthrop → Leavenworth → Rainier &nbsp;·&nbsp; Jul 14–18 &nbsp;·&nbsp; ✈ F9 out 3:04 PM Tue · back 10:34 AM Sat</span>
+</header>
+
+<div class="app">
+  <div id="map" role="application" aria-label="Trip map"></div>
+
+  <aside class="panel">
+    <nav class="tabs" id="tabs" aria-label="Trip days"></nav>
+    <div class="log" id="log"></div>
+    <section class="check" aria-label="Booking checklist">
+      <h4>Book tonight</h4>
+      <div id="checklist"></div>
+    </section>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ================= DATA ================= */
+const DAYS = [
+  {
+    id:1, color:'#5B7DB1', name:'Land & Head North', date:'Tue · Jul 14',
+    summary:'F9 out of LAX at 3:04 PM, wheels down SEA 5:51 PM. Grab the car and run I-5 straight north — Walmart gear stop in Burlington, then east onto Highway 20. Asleep at the doorstep of the North Cascades before dark.',
+    chips:['✈ Land 5:51 PM','🛒 Walmart gear run','🌲 Sleep: forest road'],
+    stops:[
+      {n:1, name:'SEA — pick up car', t:'~6:30 PM', ll:[47.4502,-122.3088],
+       note:'Land 5:51, Turo/rental pickup by 6:30. Confirm the rear seats fold flat before you drive off — that\u2019s the bed.'},
+      {n:2, name:'Walmart Supercenter — Burlington', t:'~7:45 PM', ll:[48.4676,-122.3384],
+       note:'The one-stop gear run: sleeping bag (~$15), fleece blanket, foam pad or air mattress, windshield shade, soft cooler + ice, gallon waters, headlamp, snacks. ~$60 total, 25 min in and out.'},
+      {n:3, name:'Marblemount — dinner & camp', t:'~9:00 PM', ll:[48.5326,-121.4443],
+       note:'Last real food before Winthrop — grab it if anything\u2019s still open, otherwise cooler dinner. Then find a pullout up Cascade River Road. Park level, crack a window, headlamp in reach.'},
+    ],
+    lodging:{title:'Sleep: Cascade River Road (free)', body:'Dispersed pullouts on the forest road out of Marblemount — legal, free, quiet. July sunset is ~9 PM so you\u2019ll arrive with light. Backup if it feels off: Buffalo Run Inn in town.'},
+    route:[[47.4502,-122.3088],[48.2098,-122.2337],[48.4676,-122.3384],[48.5054,-121.7570],[48.5326,-121.4443]]
+  },
+  {
+    id:2, color:'#2FA8A0', name:'North Cascades', date:'Wed · Jul 15',
+    summary:'The Newhalem→Mazama stretch of Highway 20 is the most alpine-looking road in America. Turquoise lakes, granite spires, one big hike, then an Old West town for the night.',
+    chips:['🥾 Maple Pass 7.2 mi','🚗 2 hr drive','🤠 Sleep: Winthrop'],
+    stops:[
+      {n:1, name:'Diablo Lake Vista Point', t:'8:30 AM', ll:[48.7099,-121.0974],
+       note:'The turquoise is glacial flour suspended in the water — it\u2019s really that color. Before 10 AM = easy parking, calm water, best light.'},
+      {n:2, name:'Maple Pass Loop trailhead', t:'10:30 AM', ll:[48.5155,-120.7355],
+       note:'7.2 mi / 2,000 ft — the best day hike in the state. Go counter-clockwise. Short on time or legs? Blue Lake (4.6 mi) from the same corridor. NW Forest Pass or $5 at the trailhead.'},
+      {n:3, name:'Washington Pass Overlook', t:'3:30 PM', ll:[48.5261,-120.6500],
+       note:'Liberty Bell Mountain towers straight over the highway hairpin. Paved 5-min path from the lot. Restrooms.'},
+      {n:4, name:'Winthrop', t:'5:00 PM', ll:[48.4778,-120.1854],
+       note:'Entire town is an Old West boardwalk. Beer on the river deck at Old Schoolhouse Brewery; dinner at Copper Glance or East 20 Pizza.'},
+    ],
+    lodging:{title:'Sleep: Goat Creek / FR 5400 (free)', body:'Dispersed sites off Forest Road 5400 near Mazama, 15 min from Winthrop — scout your spot before dinner and beers, then roll back after. Coin shower Thu morning at Pearrygin Lake State Park. Upgrade option if the hike wrecked you: Hotel Rio Vista or Mt. Gardner Inn, decide by 6 PM.'},
+    route:[[48.5326,-121.4443],[48.6739,-121.2447],[48.7099,-121.0974],[48.5155,-120.7355],[48.5261,-120.6500],[48.5920,-120.4029],[48.4778,-120.1854]]
+  },
+  {
+    id:3, color:'#D99A2B', name:'Old West → Bavaria', date:'Thu · Jul 16',
+    summary:'Cruise the Methow Valley south along the Columbia River, then swap cowboy for lederhosen. Afternoon on the river, liter steins by night.',
+    chips:['🚗 2.5 hr drive','🛟 River tubing','🍺 Sleep: Leavenworth'],
+    stops:[
+      {n:1, name:'Methow Valley → Columbia River drive', t:'9:30 AM', ll:[48.0546,-119.9012],
+       note:'WA-153 → US-97 south along the Columbia. Big, dry, golden country — total contrast to yesterday. Fruit stands everywhere; buy cherries, it\u2019s peak season.'},
+      {n:2, name:'Leavenworth — Front Street', t:'12:30 PM', ll:[47.5965,-120.6597],
+       note:'Fully committed Bavarian theme town. Lunch: bratwurst + pretzel at München Haus rooftop.'},
+      {n:3, name:'Wenatchee River tubing', t:'2:30 PM', ll:[47.5880,-120.6520],
+       note:'Leavenworth Outdoor Center, ~$30 with shuttle. Mid-July = warm water, mellow-but-fun current. Book the 2:30 slot online this morning.'},
+      {n:4, name:'Beer hall night', t:'7:00 PM', ll:[47.5962,-120.6615],
+       note:'Andreas Keller (accordion, steins, schnitzel) or Icicle Brewing\u2019s patio. Front Street stays lively late in summer.'},
+    ],
+    lodging:{title:'Decision night — call it by 6 PM', body:'If liter steins are happening: book a walkable Leavenworth bed (LOGE is cheapest) BEFORE the beer hall — no forest-road hunting after drinking, ever. Taking it easy instead: Wenatchee Walmart lot is fine, with a Planet Fitness shower next door in the morning.'},
+    route:[[48.4778,-120.1854],[48.3652,-120.1214],[48.0546,-119.9012],[47.4235,-120.3103],[47.5962,-120.6615]]
+  },
+  {
+    id:4, color:'#C94F7C', name:'Chinook Pass → Rainier', date:'Fri · Jul 17',
+    summary:'The drive south crests Chinook Pass — Rainier fills the windshield at Tipsoo Lake, a top-5 US road moment. Afternoon and golden hour in the Paradise wildflower meadows.',
+    chips:['🚗 3.5 hr drive','🌸 Peak wildflowers','🏔 Sleep: Ashford'],
+    stops:[
+      {n:1, name:'Blewett Pass → Chinook Pass', t:'9:00 AM', ll:[47.3350,-120.5780],
+       note:'US-97 over Blewett, then WA-410 up and over Chinook. Gas up in Cle Elum — it\u2019s thin after that.'},
+      {n:2, name:'Tipsoo Lake', t:'12:30 PM', ll:[46.8697,-121.5195],
+       note:'Rainier reflected in an alpine lake right off the road. 30-min loop walk. This is the photo of the trip.'},
+      {n:3, name:'Paradise — Skyline Trail', t:'3:00 PM', ll:[46.7860,-121.7365],
+       note:'No timed entry in 2026 — just $30/vehicle at the gate. Arriving after 3 PM = parking frees up as the day crowd leaves. Hike Skyline toward Panorama Point through peak wildflower meadows. Bring a real layer — it can be 50°F up here.'},
+      {n:4, name:'Sunset on the mountain', t:'8:30 PM', ll:[46.7860,-121.7365],
+       note:'This is the finale — your flight leaves at 10:34 AM tomorrow, so tonight IS the Rainier moment. Stay through golden hour and alpenglow. Sunset ~8:55 PM; drive down with the last light.'},
+    ],
+    lodging:{title:'Sleep: Skate Creek Road / FR 52 (free)', body:'Forest road pullouts in Gifford Pinchot NF between Ashford and Packwood — pick a spot close to the Ashford end to shave minutes off the early airport run. Set an alarm for 6:15 AM.'},
+    route:[[47.5962,-120.6615],[47.3350,-120.5780],[47.1954,-120.9394],[46.9840,-120.5478],[46.8697,-121.5195],[46.7860,-121.7365],[46.7576,-122.0345]]
+  },
+  {
+    id:5, color:'#4E7A4E', name:'Airport Run', date:'Sat · Jul 18',
+    summary:'F9 departs 10:34 AM, so this is a mission, not a morning: wake at 6:15, roll by 6:45, straight shot to SEA. You watched sunset on Rainier twelve hours before landing in LA.',
+    chips:['⏰ Roll by 6:45 AM','🚗 2.5 hr drive','✈ F9 10:34 AM'],
+    stops:[
+      {n:1, name:'Wake & roll — Skate Creek Rd', t:'6:15 AM', ll:[46.7290,-121.9060],
+       note:'No detours today. Coffee + gas in Ashford or Eatonville. Route: WA-706 → WA-7 → I-5 north, ~2.5 hrs with morning traffic buffer.'},
+      {n:2, name:'Gas up near airport', t:'~8:45 AM', ll:[47.4310,-122.2920],
+       note:'Fill the tank before returning the car — Turo hosts and agencies both charge brutal refuel rates. Stations on International Blvd.'},
+      {n:3, name:'SEA — drop car & fly', t:'9:00 AM', ll:[47.4502,-122.3088],
+       note:'Car back by 9:00, security by 9:15 — Frontier boarding closes 20 min before departure and they do not wait. Personal item only, breeze through.'},
+    ],
+    lodging:{title:'Home', body:'LAX at 1:34 PM. Back in LA with half a Saturday left and a $800 trip behind you. Koi fish await.'},
+    route:[[46.7290,-121.9060],[46.7576,-122.0345],[46.8680,-122.2740],[47.1954,-122.2940],[47.4502,-122.3088]]
+  },
+];
+
+const CHECKLIST = [
+  '✈ BOOKED: F9 · LAX 3:04 PM Tue → SEA 5:51 PM · SEA 10:34 AM Sat → LAX 1:34 PM (skip the $44 seat pick — free random seat at check-in)',
+  'Turo: compact SUV w/ FOLD-FLAT rear seats, Tue eve → Sat 9 AM, airport pickup — book before sleep',
+  'Frontier bag rule: PERSONAL ITEM ONLY (18x14x8). One backpack. Sleeping bag gets bought at Walmart, not flown.',
+  'Check in on Frontier app 24 hrs out (Mon ~3 PM) — skip counter lines',
+  'Screenshot forest road spots NOW: Cascade River Rd, FR 5400 Goat Creek (Mazama), Skate Creek Rd FR 52 — no signal out there',
+  'Tubing slot: Leavenworth Outdoor Center, Thu ~2:30 PM',
+  'Check WSDOT for Hwy 20 status before Wed (summer fire closures happen)',
+  'Pack (fits in one backpack): warm layer, sunscreen, hiking shoes, swimsuit, headlamp if you own one, phone battery pack',
+  'NW Forest Pass for Maple Pass trailhead (or $5 cash at the lot)',
+  'Thursday rule: beer hall night = book walkable bed BY 6 PM. Never drive to find camp after drinking.',
+];
+
+/* ================= MAP ================= */
+const map = L.map('map', {zoomControl:true}).setView([47.8,-121.2], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 17, attribution: '© OpenStreetMap'
+}).addTo(map);
+
+const layers = {};
+DAYS.forEach(d => {
+  const g = L.layerGroup();
+  L.polyline(d.route, {color:d.color, weight:4, opacity:.9, dashArray:'1 0'}).addTo(g);
+  d.stops.forEach(s => {
+    const m = L.circleMarker(s.ll, {
+      radius:8, color:'#fff', weight:2, fillColor:d.color, fillOpacity:1
+    }).bindPopup(`<b>${s.name}</b><br><span style="color:#888;font-size:11px">Day ${d.id} · ${s.t}</span><br>${s.note}`);
+    m.addTo(g);
+  });
+  layers[d.id] = g;
+  g.addTo(map);
+});
+
+function focusDay(id){
+  Object.entries(layers).forEach(([k,g])=>{
+    g.eachLayer(l=>{
+      const active = (+k === id);
+      if (l instanceof L.Polyline && !(l instanceof L.Polygon)) l.setStyle({opacity: active? .95 : .18, weight: active? 5:3});
+      if (l instanceof L.CircleMarker) l.setStyle({fillOpacity: active? 1:.25, opacity: active? 1:.25});
+    });
+  });
+  const d = DAYS.find(x=>x.id===id);
+  map.flyToBounds(L.latLngBounds(d.route).pad(.25), {duration:.6});
+}
+
+/* ================= PANEL ================= */
+const tabsEl = document.getElementById('tabs');
+const logEl  = document.getElementById('log');
+
+DAYS.forEach(d=>{
+  const b = document.createElement('button');
+  b.className = 'tab'; b.setAttribute('aria-label', `Day ${d.id}: ${d.name}`);
+  b.innerHTML = `<span class="blaze" style="background:${d.color}">${d.id}</span><span class="lbl">${d.date.split('·')[0].trim()}</span>`;
+  b.onclick = ()=>selectDay(d.id);
+  tabsEl.appendChild(b);
+});
+
+function selectDay(id){
+  [...tabsEl.children].forEach((t,i)=>t.classList.toggle('active', i===id-1));
+  const d = DAYS.find(x=>x.id===id);
+  logEl.innerHTML = `
+    <div class="day-head"><h2 style="color:${d.color}">Day ${d.id} — ${d.name}</h2><span class="date">${d.date}</span></div>
+    <p class="day-sum">${d.summary}</p>
+    <div class="chips">${d.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+    ${d.stops.map(s=>`
+      <div class="stop" data-n="${s.n}" style="--dc:${d.color}" data-ll="${s.ll.join(',')}">
+        <h3>${s.name}<span class="t">${s.t}</span></h3>
+        <p>${s.note}</p>
+      </div>`).join('')}
+    <div class="lodging"><b>${d.lodging.title}</b>${d.lodging.body}</div>
+  `;
+  logEl.querySelectorAll('.stop').forEach(el=>{
+    el.onclick = ()=>{
+      const [lat,lng] = el.dataset.ll.split(',').map(Number);
+      map.flyTo([lat,lng], 12, {duration:.6});
+    };
+  });
+  logEl.scrollTop = 0;
+  focusDay(id);
+}
+
+/* ================= CHECKLIST ================= */
+const state = {}; // in-memory only
+const clEl = document.getElementById('checklist');
+CHECKLIST.forEach((item,i)=>{
+  const lab = document.createElement('label');
+  lab.innerHTML = `<input type="checkbox"><span>${item}</span>`;
+  lab.querySelector('input').onchange = e=>{
+    state[i] = e.target.checked;
+    lab.classList.toggle('done', e.target.checked);
+  };
+  clEl.appendChild(lab);
+});
+
+selectDay(1);
+</script>
+</body>
+</html>
