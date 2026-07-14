@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cascade Loop — 5 Days</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,11 +23,14 @@
     --d5:#4E7A4E;
     --radius:10px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
     font-family:'Public Sans',system-ui,sans-serif;color:var(--ink);
     background:var(--pine);display:flex;flex-direction:column;overflow:hidden;
+  }
+  @supports(height:100dvh){
+    body{height:100dvh} /* dodges the iOS Safari URL-bar jump */
   }
 
   /* ---------- Header ---------- */
@@ -41,10 +44,20 @@
     font-size:clamp(22px,3.4vw,34px);letter-spacing:.04em;text-transform:uppercase;
   }
   header .sub{font-size:12.5px;opacity:.75;letter-spacing:.06em;text-transform:uppercase}
+  #map-toggle{
+    margin-left:auto;flex:none;cursor:pointer;
+    background:transparent;color:var(--paper);border:1.5px solid var(--glacial);
+    border-radius:99px;padding:5px 12px;
+    font:700 11px/1 'Public Sans',sans-serif;letter-spacing:.07em;text-transform:uppercase;
+  }
+  #map-toggle:hover{background:var(--pine-2)}
+  #map-toggle:focus-visible{outline:2px solid var(--glacial);outline-offset:2px}
 
   /* ---------- Layout ---------- */
   .app{flex:1;display:flex;min-height:0}
   #map{flex:1;min-width:0}
+  body.map-hidden #map{flex:0 0 0;width:0;min-width:0;overflow:hidden}
+  body.map-hidden .panel{width:100%;max-width:none;box-shadow:none}
   .panel{
     width:400px;max-width:46vw;background:var(--paper);
     display:flex;flex-direction:column;min-height:0;
@@ -53,11 +66,12 @@
 
   /* ---------- Day tabs (trail markers) ---------- */
   .tabs{
-    display:flex;gap:6px;padding:12px 14px;background:var(--paper-2);
+    display:flex;gap:6px;padding:8px 14px;background:var(--paper-2);
     border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto;flex:none;
+    justify-content:center;
   }
   .tab{
-    flex:1;min-width:56px;border:none;cursor:pointer;background:transparent;
+    flex:0 1 96px;min-width:64px;border:none;cursor:pointer;background:transparent;
     display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;
     border-radius:8px;transition:background .15s;
   }
@@ -74,7 +88,7 @@
   .tab:focus-visible{outline:2px solid var(--glacial);outline-offset:2px}
 
   /* ---------- Trail log ---------- */
-  .log{flex:1;overflow-y:auto;padding:18px 20px 28px}
+  .log{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 20px 28px}
   .day-head{margin-bottom:4px;display:flex;align-items:baseline;gap:10px}
   .day-head h2{
     font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:26px;
@@ -114,12 +128,22 @@
   /* ---------- Checklist ---------- */
   .check{
     flex:none;border-top:2px solid var(--pine);background:var(--paper-2);
-    padding:12px 20px 14px;max-height:34%;overflow-y:auto;
+    padding:0 20px 14px;max-height:34%;overflow-y:auto;-webkit-overflow-scrolling:touch;
   }
   .check h4{
     font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:15px;
-    letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;
+    letter-spacing:.08em;text-transform:uppercase;
+    display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    position:sticky;top:0;background:var(--paper-2);padding:12px 0 8px;
   }
+  .check h4 .cnt{
+    font-family:'Public Sans',sans-serif;font-size:11px;font-weight:700;
+    color:var(--paper);background:var(--glacial);padding:2px 8px;border-radius:99px;letter-spacing:.02em;
+  }
+  .check h4 .chev{margin-left:auto;font-size:12px;transition:transform .15s}
+  .check.collapsed{max-height:none;overflow:visible;padding-bottom:6px}
+  .check.collapsed h4 .chev{transform:rotate(-90deg)}
+  .check.collapsed #checklist{display:none}
   .check label{
     display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.45;
     padding:4px 0;cursor:pointer;
@@ -135,10 +159,28 @@
   /* ---------- Mobile ---------- */
   @media (max-width:760px){
     .app{flex-direction:column}
-    #map{flex:none;height:44vh}
-    .panel{width:100%;max-width:none;flex:1;box-shadow:0 -6px 24px rgba(0,0,0,.35)}
-    .check{max-height:30%}
-    header{padding:10px 14px 9px}
+    #map{flex:none;height:40vh;transition:height .25s ease}
+    @supports(height:40dvh){#map{height:40dvh}}
+    body.map-hidden #map{height:0;width:auto;flex:none}
+    #map-toggle{padding:5px 10px;font-size:10px}
+    .panel{width:100%;max-width:none;flex:1;min-height:0;box-shadow:0 -6px 24px rgba(0,0,0,.35)}
+    header{padding:9px 14px 8px;gap:8px}
+    header .sub{font-size:10.5px}
+    /* bigger thumb targets */
+    .tabs{padding:6px 8px;gap:4px}
+    .tab{flex:1;min-width:56px;padding:7px 2px}
+    .tab .blaze{width:40px;height:44px;font-size:18px}
+    .tab .lbl{font-size:10.5px}
+    .log{padding:14px 14px 24px}
+    .stop{padding:14px 14px 14px 42px;margin-bottom:12px}
+    .stop:hover{transform:none}
+    .stop h3{font-size:15px}
+    .stop p{font-size:13.5px}
+    .check{padding:0 14px 12px;max-height:38%}
+    .check label{padding:7px 0;font-size:13px}
+    .check input{width:18px;height:18px;flex:none}
+    /* give the bottom of the panel breathing room above the home bar */
+    .log,.check{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
   }
   @media (prefers-reduced-motion:reduce){
     *{transition:none!important;animation:none!important}
@@ -150,16 +192,18 @@
 <header>
   <h1>Cascade Loop</h1>
   <span class="sub">Seattle → North Cascades → Winthrop → Leavenworth → Rainier &nbsp;·&nbsp; Jul 14–18 &nbsp;·&nbsp; ✈ F9 out 3:04 PM Tue · back 10:34 AM Sat</span>
+  <button id="map-toggle" aria-pressed="false">Hide map</button>
 </header>
+
+<nav class="tabs" id="tabs" aria-label="Trip days"></nav>
 
 <div class="app">
   <div id="map" role="application" aria-label="Trip map"></div>
 
   <aside class="panel">
-    <nav class="tabs" id="tabs" aria-label="Trip days"></nav>
     <div class="log" id="log"></div>
-    <section class="check" aria-label="Booking checklist">
-      <h4>Book tonight</h4>
+    <section class="check" id="check-sec" aria-label="Booking checklist">
+      <h4 id="check-head">Checklist <span class="cnt" id="check-count">0/0</span><span class="chev">▾</span></h4>
       <div id="checklist"></div>
     </section>
   </aside>
@@ -170,36 +214,38 @@
 /* ================= DATA ================= */
 const DAYS = [
   {
-    id:1, color:'#5B7DB1', name:'Land & Head North', date:'Tue · Jul 14',
-    summary:'F9 out of LAX at 3:04 PM, wheels down SEA 5:51 PM. Grab the car and run I-5 straight north — Walmart gear stop in Burlington, then east onto Highway 20. Asleep at the doorstep of the North Cascades before dark.',
-    chips:['✈ Land 5:51 PM','🛒 Walmart gear run','🌲 Sleep: forest road'],
+    id:1, color:'#5B7DB1', name:'Land & Seattle Night', date:'Tue · Jul 14',
+    summary:'F9 out of LAX at 3:04 PM, wheels down SEA 5:51 PM. Grab the Jeep and head into the city — your friend\u2019s only in Seattle tonight, so night one is a real bed, a shower, and a proper send-off. The Walmart gear run moves to tomorrow morning.',
+    chips:['✈ Land 5:51 PM','🚙 Turo 6:30 PM','🛏 Sleep: friend\u2019s place'],
     stops:[
-      {n:1, name:'SEA — pick up car', t:'~6:30 PM', ll:[47.4502,-122.3088],
-       note:'Land 5:51, Turo/rental pickup by 6:30. Confirm the rear seats fold flat before you drive off — that\u2019s the bed.'},
-      {n:2, name:'Walmart Supercenter — Burlington', t:'~7:45 PM', ll:[48.4676,-122.3384],
-       note:'The one-stop gear run: sleeping bag (~$15), fleece blanket, foam pad or air mattress, windshield shade, soft cooler + ice, gallon waters, headlamp, snacks. ~$60 total, 25 min in and out.'},
-      {n:3, name:'Marblemount — dinner & camp', t:'~9:00 PM', ll:[48.5326,-121.4443],
-       note:'Last real food before Winthrop — grab it if anything\u2019s still open, otherwise cooler dinner. Then find a pullout up Cascade River Road. Park level, crack a window, headlamp in reach.'},
+      {n:1, name:'SEA — Turo pickup', t:'6:30 PM', ll:[47.4502,-122.3088],
+       note:'2017 Jeep Cherokee (5.0★, 19 trips, on-site at SEA). Before driving off: shoot a 90-second walkaround video — every panel, wheels, windshield, interior — confirm the mileage allowance is ≥800 mi, and check the rear seats fold flat. That\u2019s the bed for the rest of the week.'},
+      {n:2, name:'Friend\u2019s place — Wallingford', t:'~7:15 PM', ll:[47.6500,-122.3308],
+       note:'2321 N Northlake Way — north shore of Lake Union, right next to the Puget Sound Yacht Club. ~25 min from SEA up I-5. She\u2019s only in town Tuesday, so tonight\u2019s the window — dinner, catch up, night out or in. Charge every device and the battery pack while you have outlets. Text the second friend when you land; their availability is still up in the air.'},
+      {n:3, name:'Gas Works Park — if the night wanders', t:'dusk', ll:[47.6456,-122.3344],
+       note:'Optional, and it\u2019s a two-minute walk from her door. Full skyline across Lake Union, seaplanes coming in, sunset ~9 PM — the best free view in the city happens to be next door.'},
     ],
-    lodging:{title:'Sleep: Cascade River Road (free)', body:'Dispersed pullouts on the forest road out of Marblemount — legal, free, quiet. July sunset is ~9 PM so you\u2019ll arrive with light. Backup if it feels off: Buffalo Run Inn in town.'},
-    route:[[47.4502,-122.3088],[48.2098,-122.2337],[48.4676,-122.3384],[48.5054,-121.7570],[48.5326,-121.4443]]
+    lodging:{title:'Sleep: friend\u2019s place (free)', body:'Real bed, real shower, everything charging overnight. Set the alarm before the beers — tomorrow starts at 7:00 AM sharp to fit the gear run in before the mountains.'},
+    route:[[47.4502,-122.3088],[47.6500,-122.3308]]
   },
   {
-    id:2, color:'#2FA8A0', name:'North Cascades', date:'Wed · Jul 15',
-    summary:'The Newhalem→Mazama stretch of Highway 20 is the most alpine-looking road in America. Turquoise lakes, granite spires, one big hike, then an Old West town for the night.',
-    chips:['🥾 Maple Pass 7.2 mi','🚗 2 hr drive','🤠 Sleep: Winthrop'],
+    id:2, color:'#2FA8A0', name:'Gear Up & North Cascades', date:'Wed · Jul 15',
+    summary:'Roll at 7:00 AM sharp. Walmart in Burlington for the whole camp kit, then east onto Highway 20 — the Newhalem→Mazama stretch is the most alpine-looking road in America. Turquoise lakes, granite spires, one big hike, then an Old West town for the night.',
+    chips:['⏰ Roll 7:00 AM','🛒 Walmart gear run','🥾 Maple Pass 7.2 mi','🤠 Sleep: Winthrop'],
     stops:[
-      {n:1, name:'Diablo Lake Vista Point', t:'8:30 AM', ll:[48.7099,-121.0974],
-       note:'The turquoise is glacial flour suspended in the water — it\u2019s really that color. Before 10 AM = easy parking, calm water, best light.'},
-      {n:2, name:'Maple Pass Loop trailhead', t:'10:30 AM', ll:[48.5155,-120.7355],
-       note:'7.2 mi / 2,000 ft — the best day hike in the state. Go counter-clockwise. Short on time or legs? Blue Lake (4.6 mi) from the same corridor. NW Forest Pass or $5 at the trailhead.'},
-      {n:3, name:'Washington Pass Overlook', t:'3:30 PM', ll:[48.5261,-120.6500],
+      {n:1, name:'Walmart Supercenter — Burlington', t:'8:15 AM', ll:[48.4676,-122.3384],
+       note:'Right off I-5. The one-stop gear run (~$60, 25 min in and out): sleeping bag (~$15), fleece blanket, foam pad or air mattress, windshield shade, soft cooler + ice, gallon waters, headlamp, snacks. New Chase card is the trip card.'},
+      {n:2, name:'Diablo Lake Vista Point', t:'10:30 AM', ll:[48.7099,-121.0974],
+       note:'The turquoise is glacial flour suspended in the water — it\u2019s really that color. Mid-morning on a Wednesday still means easy parking.'},
+      {n:3, name:'Maple Pass Loop trailhead', t:'11:30 AM', ll:[48.5155,-120.7355],
+       note:'7.2 mi / 2,000 ft — the best day hike in the state. Go counter-clockwise. Later start than the old plan, but it\u2019s a weekday and the lot turns over. Short on time or legs? Blue Lake (4.6 mi) from the same corridor. NW Forest Pass or $5 at the trailhead.'},
+      {n:4, name:'Washington Pass Overlook', t:'4:30 PM', ll:[48.5261,-120.6500],
        note:'Liberty Bell Mountain towers straight over the highway hairpin. Paved 5-min path from the lot. Restrooms.'},
-      {n:4, name:'Winthrop', t:'5:00 PM', ll:[48.4778,-120.1854],
+      {n:5, name:'Winthrop', t:'5:45 PM', ll:[48.4778,-120.1854],
        note:'Entire town is an Old West boardwalk. Beer on the river deck at Old Schoolhouse Brewery; dinner at Copper Glance or East 20 Pizza.'},
     ],
     lodging:{title:'Sleep: Goat Creek / FR 5400 (free)', body:'Dispersed sites off Forest Road 5400 near Mazama, 15 min from Winthrop — scout your spot before dinner and beers, then roll back after. Coin shower Thu morning at Pearrygin Lake State Park. Upgrade option if the hike wrecked you: Hotel Rio Vista or Mt. Gardner Inn, decide by 6 PM.'},
-    route:[[48.5326,-121.4443],[48.6739,-121.2447],[48.7099,-121.0974],[48.5155,-120.7355],[48.5261,-120.6500],[48.5920,-120.4029],[48.4778,-120.1854]]
+    route:[[47.6500,-122.3308],[48.2098,-122.2337],[48.4676,-122.3384],[48.5054,-121.7570],[48.5326,-121.4443],[48.6739,-121.2447],[48.7099,-121.0974],[48.5155,-120.7355],[48.5261,-120.6500],[48.5920,-120.4029],[48.4778,-120.1854]]
   },
   {
     id:3, color:'#D99A2B', name:'Old West → Bavaria', date:'Thu · Jul 16',
@@ -237,32 +283,36 @@ const DAYS = [
   },
   {
     id:5, color:'#4E7A4E', name:'Airport Run', date:'Sat · Jul 18',
-    summary:'F9 departs 10:34 AM, so this is a mission, not a morning: wake at 6:15, roll by 6:45, straight shot to SEA. You watched sunset on Rainier twelve hours before landing in LA.',
+    summary:'F9 departs 10:34 AM and boarding CLOSES 10:14 — this is a mission, not a morning. Wake at 6:15, roll by 6:45, straight shot to SEA. You watched sunset on Rainier twelve hours before landing in LA.',
     chips:['⏰ Roll by 6:45 AM','🚗 2.5 hr drive','✈ F9 10:34 AM'],
     stops:[
       {n:1, name:'Wake & roll — Skate Creek Rd', t:'6:15 AM', ll:[46.7290,-121.9060],
-       note:'No detours today. Coffee + gas in Ashford or Eatonville. Route: WA-706 → WA-7 → I-5 north, ~2.5 hrs with morning traffic buffer.'},
+       note:'No detours today — Saturday has zero slack. Coffee + gas in Ashford or Eatonville. Route: WA-706 → WA-7 → I-5 north, ~2.5 hrs with morning traffic buffer.'},
       {n:2, name:'Gas up near airport', t:'~8:45 AM', ll:[47.4310,-122.2920],
-       note:'Fill the tank before returning the car — Turo hosts and agencies both charge brutal refuel rates. Stations on International Blvd.'},
+       note:'Fill the tank before returning the car — Turo hosts charge brutal refuel rates. Stations on International Blvd.'},
       {n:3, name:'SEA — drop car & fly', t:'9:00 AM', ll:[47.4502,-122.3088],
-       note:'Car back by 9:00, security by 9:15 — Frontier boarding closes 20 min before departure and they do not wait. Personal item only, breeze through.'},
+       note:'Car back by 9:00 (verify the Turo return got moved from 9:30), security by 9:15 — boarding closes 10:14 and Frontier does not wait. Personal item only, breeze through.'},
     ],
-    lodging:{title:'Home', body:'LAX at 1:34 PM. Back in LA with half a Saturday left and a $800 trip behind you. Koi fish await.'},
+    lodging:{title:'Home', body:'LAX at 1:34 PM. Back in LA with half a Saturday left and a ~$1,000 trip behind you. Koi fish await.'},
     route:[[46.7290,-121.9060],[46.7576,-122.0345],[46.8680,-122.2740],[47.1954,-122.2940],[47.4502,-122.3088]]
   },
 ];
 
 const CHECKLIST = [
-  '✈ BOOKED: F9 · LAX 3:04 PM Tue → SEA 5:51 PM · SEA 10:34 AM Sat → LAX 1:34 PM (skip the $44 seat pick — free random seat at check-in)',
-  'Turo: compact SUV w/ FOLD-FLAT rear seats, Tue eve → Sat 9 AM, airport pickup — book before sleep',
-  'Frontier bag rule: PERSONAL ITEM ONLY (18x14x8). One backpack. Sleeping bag gets bought at Walmart, not flown.',
-  'Check in on Frontier app 24 hrs out (Mon ~3 PM) — skip counter lines',
-  'Screenshot forest road spots NOW: Cascade River Rd, FR 5400 Goat Creek (Mazama), Skate Creek Rd FR 52 — no signal out there',
-  'Tubing slot: Leavenworth Outdoor Center, Thu ~2:30 PM',
+  '✈ BOOKED: F9 1177 · LAX 3:04 PM Tue → SEA 5:51 PM · return SEA 10:34 AM Sat (boarding CLOSES 10:14) · Conf: LBVJ6V',
+  'Frontier check-in Mon ~3:10 PM (calendar reminder set) — skip the $44 seat pick, take the free random seat',
+  '🚙 BOOKED: Turo 2017 Jeep Cherokee (5.0★, on-site SEA) · pickup Tue 6:30 PM · Standard protection ($500 max out-of-pocket) — VERIFY return was moved to Sat 9:00 AM, not 9:30',
+  'At Turo pickup: 90-sec walkaround video (panels, wheels, glass, interior) + confirm mileage allowance ≥800 mi',
+  'Frontier bag rule: PERSONAL ITEM ONLY (18×14×8). One backpack. Sleeping bag gets bought at Walmart, not flown.',
+  'Text the second Seattle friend — availability still unresolved for Tuesday night',
+  'Walmart gear run is now WEDNESDAY 8:15 AM in Burlington (~$60) — new Chase card is the trip card',
+  'Screenshot forest-road spots NOW (no signal out there): FR 5400 Goat Creek (Mazama), Skate Creek Rd FR 52',
+  'Tubing slot: book Leavenworth Outdoor Center, Thu ~2:30 PM',
   'Check WSDOT for Hwy 20 status before Wed (summer fire closures happen)',
-  'Pack (fits in one backpack): warm layer, sunscreen, hiking shoes, swimsuit, headlamp if you own one, phone battery pack',
   'NW Forest Pass for Maple Pass trailhead (or $5 cash at the lot)',
+  'Rainier: no timed entry in 2026 — $30/vehicle at the gate',
   'Thursday rule: beer hall night = book walkable bed BY 6 PM. Never drive to find camp after drinking.',
+  'Pack (fits in one backpack): warm layer, sunscreen, hiking shoes, swimsuit, headlamp, phone battery pack',
 ];
 
 /* ================= MAP ================= */
@@ -272,6 +322,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 const layers = {};
+const markerIndex = {}; // "dayId-stopN" → marker, for tap-to-popup
 DAYS.forEach(d => {
   const g = L.layerGroup();
   L.polyline(d.route, {color:d.color, weight:4, opacity:.9, dashArray:'1 0'}).addTo(g);
@@ -280,12 +331,14 @@ DAYS.forEach(d => {
       radius:8, color:'#fff', weight:2, fillColor:d.color, fillOpacity:1
     }).bindPopup(`<b>${s.name}</b><br><span style="color:#888;font-size:11px">Day ${d.id} · ${s.t}</span><br>${s.note}`);
     m.addTo(g);
+    markerIndex[`${d.id}-${s.n}`] = m;
   });
   layers[d.id] = g;
   g.addTo(map);
 });
 
 function focusDay(id){
+  currentDay = id;
   Object.entries(layers).forEach(([k,g])=>{
     g.eachLayer(l=>{
       const active = (+k === id);
@@ -293,9 +346,25 @@ function focusDay(id){
       if (l instanceof L.CircleMarker) l.setStyle({fillOpacity: active? 1:.25, opacity: active? 1:.25});
     });
   });
+  if (document.body.classList.contains('map-hidden')) return; // no fly math on a zero-size map
   const d = DAYS.find(x=>x.id===id);
   map.flyToBounds(L.latLngBounds(d.route).pad(.25), {duration:.6});
 }
+
+/* ================= MAP TOGGLE ================= */
+let currentDay = 1;
+const mapToggle = document.getElementById('map-toggle');
+function setMapHidden(h){
+  document.body.classList.toggle('map-hidden', h);
+  mapToggle.textContent = h ? 'Show map' : 'Hide map';
+  mapToggle.setAttribute('aria-pressed', String(h));
+  if (!h) setTimeout(()=>{ // Leaflet re-measures after the panel gives the space back
+    map.invalidateSize();
+    const d = DAYS.find(x=>x.id===currentDay);
+    map.fitBounds(L.latLngBounds(d.route).pad(.25));
+  }, 280);
+}
+mapToggle.onclick = ()=> setMapHidden(!document.body.classList.contains('map-hidden'));
 
 /* ================= PANEL ================= */
 const tabsEl = document.getElementById('tabs');
@@ -325,8 +394,14 @@ function selectDay(id){
   `;
   logEl.querySelectorAll('.stop').forEach(el=>{
     el.onclick = ()=>{
+      const wasHidden = document.body.classList.contains('map-hidden');
+      if (wasHidden) setMapHidden(false); // tapping a stop brings the map back
       const [lat,lng] = el.dataset.ll.split(',').map(Number);
-      map.flyTo([lat,lng], 12, {duration:.6});
+      setTimeout(()=>{
+        map.flyTo([lat,lng], 12, {duration:.6});
+        const mk = markerIndex[`${id}-${el.dataset.n}`];
+        if (mk) setTimeout(()=>mk.openPopup(), 650); // popup lands after the fly — key on mobile where the map sits above
+      }, wasHidden ? 320 : 0);
     };
   });
   logEl.scrollTop = 0;
@@ -334,19 +409,44 @@ function selectDay(id){
 }
 
 /* ================= CHECKLIST ================= */
-const state = {}; // in-memory only
+const LS_KEY = 'cascade-loop-checklist';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch(e) { state = {}; }
+
 const clEl = document.getElementById('checklist');
+const cntEl = document.getElementById('check-count');
+const checkSec = document.getElementById('check-sec');
+
+function updateCount(){
+  const done = CHECKLIST.reduce((n,_,i)=> n + (state[i]?1:0), 0);
+  cntEl.textContent = `${done}/${CHECKLIST.length}`;
+}
+
 CHECKLIST.forEach((item,i)=>{
   const lab = document.createElement('label');
   lab.innerHTML = `<input type="checkbox"><span>${item}</span>`;
-  lab.querySelector('input').onchange = e=>{
+  const box = lab.querySelector('input');
+  box.checked = !!state[i];
+  lab.classList.toggle('done', !!state[i]);
+  box.onchange = e=>{
     state[i] = e.target.checked;
     lab.classList.toggle('done', e.target.checked);
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+    updateCount();
   };
   clEl.appendChild(lab);
 });
+updateCount();
 
-selectDay(1);
+// Collapsible checklist — starts closed on phones so the itinerary gets the screen
+document.getElementById('check-head').onclick = ()=> checkSec.classList.toggle('collapsed');
+if (matchMedia('(max-width:760px)').matches) checkSec.classList.add('collapsed');
+
+/* ================= AUTO-SELECT TODAY ================= */
+const TRIP = {'2026-07-14':1,'2026-07-15':2,'2026-07-16':3,'2026-07-17':4,'2026-07-18':5};
+const now = new Date();
+const key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+selectDay(TRIP[key] || 1);
 </script>
 </body>
 </html>
